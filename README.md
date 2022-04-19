@@ -28,7 +28,9 @@ class CfgPatches
 
 <h3>Useful links</h3>
 
+Trello for your ideas: [link](https://trello.com/invite/b/h7fkmeC4/4e35d36ecc7b9a1931d7894d740ca8df/dframework-ideas)
+
 Wiki: Soon..
 
-DayZ Wiki: https://community.bistudio.com/wiki/Main_Page
+DayZ Wiki: [link](https://community.bistudio.com/wiki/Main_Page)
 
