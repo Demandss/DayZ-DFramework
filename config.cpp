@@ -13,7 +13,7 @@ class CfgMods
 {
 	class DFramework
 	{
-		name = "Dick Framework";
+		name = "Demands Framework";
 		dir = "DFramework";
 		credits = "Demands";
 		author = "Demands";
