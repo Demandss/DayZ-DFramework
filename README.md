@@ -1,7 +1,7 @@
 <h1 align="center">DFramework</h1>
 
 <p align="center">
-<h3>That's how many people are interested in my profile</h3>
+<h3>That's how many people are interested in my framework</h3>
 
 ![Visitor Count](https://profile-counter.glitch.me/DFramework/count.svg)
 </p>
