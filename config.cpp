@@ -1,13 +1,4 @@
-class CfgPatches
-{
-	class DFramework
-	{
-		units[] = {};
-		weapons[] = {};
-		requiredVersion = 0.1;
-		requiredAddons[] = {"DZ_Scripts","DZ_Data","DZ_Structures","DZ_Characters"};
-	};
-};
+
 
 class CfgMods
 {
