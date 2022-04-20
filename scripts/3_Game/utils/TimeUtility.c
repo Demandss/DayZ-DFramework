@@ -1,20 +1,3 @@
-enum TimeMask
-{
-    TIME,
-    DATE,
-    DATETIME
-}
-
-enum TimeType
-{
-    SECOND,
-    MINUTE,
-    HOUR,
-    DAY,
-    MONTH,
-    YEAR
-}
-
 class TimeUtility 
 {
     static const int EPOCH_YEAR = 1970;
@@ -107,9 +90,9 @@ class TimeUtility
      * @param seconds 
      * @return "10 seconds 20 minutes 234 years"
      */
-    static string timeConverter(int seconds)
+    static string TimeConverter(int seconds)
     {
-        const string[8] words = {"timeform_second_type_","timeform_minute_type_","timeform_hour_type_","timeform_day_type_","timeform_week_type_","timeform_month_type_","timeform_year_type_","timeform_century_"}; 
+        const string[8] words = {"#timeform_second_type_","#timeform_minute_type_","#timeform_hour_type_","#timeform_day_type_","#timeform_week_type_","#timeform_month_type_","#timeform_year_type_","#timeform_century_"}; 
         const int[8] time = {SECOND_CENTURY,SECOND_YEAR,SECOND_MOUNTH,SECOND_WEEK,SECOND_DAY, SECOND_HOUR, SECOND_MINUTE,1};
         
         string result = "";
@@ -153,28 +136,28 @@ class TimeUtility
             case TimeMask.TIME:
             {
                 selectedMask = TIME_MASK;
-                timeDeterminants.Inser(TimeType.HOUR,"hh");
-                timeDeterminants.Inser(TimeType.MINUTE,"mm");
-                timeDeterminants.Inser(TimeType.SECOND,"ss");
+                timeDeterminants.Insert(TimeType.HOUR,"hh");
+                timeDeterminants.Insert(TimeType.MINUTE,"mm");
+                timeDeterminants.Insert(TimeType.SECOND,"ss");
                 break;
             };
             case TimeMask.DATE:
             {
                selectedMask = DATE_MASK;
-               timeDeterminants.Inser(TimeType.YEAR,"YYYY");
-               timeDeterminants.Inser(TimeType.MONTH,"MM");
-               timeDeterminants.Inser(TimeType.DAY,"DD");
+               timeDeterminants.Insert(TimeType.YEAR,"YYYY");
+               timeDeterminants.Insert(TimeType.MONTH,"MM");
+               timeDeterminants.Insert(TimeType.DAY,"DD");
             break;
             };
             case TimeMask.DATETIME:
             {
                selectedMask = DATETIME_MASK;
-               timeDeterminants.Inser(TimeType.YEAR,"YYYY");
-               timeDeterminants.Inser(TimeType.MONTH,"MM");
-               timeDeterminants.Inser(TimeType.DAY,"DD");
-               timeDeterminants.Inser(TimeType.HOUR,"hh");
-               timeDeterminants.Inser(TimeType.MINUTE,"mm");
-               timeDeterminants.Inser(TimeType.SECOND,"ss");
+               timeDeterminants.Insert(TimeType.YEAR,"YYYY");
+               timeDeterminants.Insert(TimeType.MONTH,"MM");
+               timeDeterminants.Insert(TimeType.DAY,"DD");
+               timeDeterminants.Insert(TimeType.HOUR,"hh");
+               timeDeterminants.Insert(TimeType.MINUTE,"mm");
+               timeDeterminants.Insert(TimeType.SECOND,"ss");
             break;
             };
         };
@@ -197,174 +180,3 @@ class TimeUtility
         return result;
     };
 };
-
-class DataTime
-{
-    protected int m_Year;
-    protected int m_Month;
-    protected int m_Day;
-    protected int m_Hour;
-    protected int m_Minute;
-    protected int m_Second;
-
-    static DataTime Now()
-    {
-        DataTime data = new DataTime();
-        
-        GetYearMonthDayUTC(data.m_Year,data.m_Month,data.m_Day);
-        GetHourMinuteSecondUTC(data.m_Hour,data.m_Minute,data.m_Second);
-
-        return data;
-    };
-
-    static int GetYear() {return m_Year;};
-    static int GetMonth() {return m_Month;};
-    static int GetDay() {return m_Day;};
-    static int GetHour() {return m_Hour;};
-    static int GetMinute() {return m_Minute;};
-    static int GetSecond() {return m_Second;};
-
-    int GetTimeByType(TimeType type)
-    {
-        switch(type) 
-        {
-            case TimeType.SECOND:
-            {
-                return GetSecond();
-                break;
-            };
-            case TimeType.MINUTE:
-            {
-                return GetMinute();
-                break;
-            };
-            case TimeType.HOUR:
-            {
-                return GetHour();
-                break;
-            };
-            case TimeType.DAY:
-            {
-                return GetDay();
-                break;
-            };
-            case TimeType.MONTH:
-            {
-                return GetMonth();
-                break;
-            };
-            case TimeType.YEAR:
-            {
-                return GetYear();
-                break;
-            };
-        };
-        return -1;
-    };
-
-    void GetYearMonthDayHourMinuteSecondUTC(out int year, out int month, out int day, out int hour, out int minute, out int second) 
-    {
-       year = m_Year;
-       month = m_Month;
-       day = m_Day;
-       hour = m_Hour;
-       minute = m_Minute;
-       second = m_Second;
-    };
-
-    /**
-     * @brief Mimic sprintf(,"%0*d",decaimal,width).
-     * 
-     * @param str 
-     * @param value 
-     * @param width 
-     */
-    static void Sprintf0d(out string str, int value, int width)
-    {
-        int d = value;
-        if (d < 0)
-        {
-            str += "-";
-            d = -d;
-            width--;
-        }
-        int n = 10;
-        for (int i = 2; i < width; i++)
-        {
-            n *= 10;
-        }
-        for (int i = 1; i < width && d < n; i++)
-        {
-            str += "0";
-            n /= 10;
-        }
-        str += d.ToString();
-    };
-
-    /**
-     * @brief Converts this Date object to a String of the form:
-     *
-     *                         MM DD hh:mm:ss YYYY
-     * 
-     * @return a string representation of this date.
-     */
-    string toString()
-    {
-        //"MM DD hh:mm:ss YYYY";
-
-        DataTime date = Now();
-        string result = "";
-        
-        Sprintf0d(result,date.GetMonth(),2);
-        result += " ";
-
-        Sprintf0d(result,date.GetDay(),2);
-        result += " ";
-
-        Sprintf0d(result,date.GetHour(),2);
-        result += ":";
-
-        Sprintf0d(result,date.GetMinute(),2);
-        result += ":";
-
-        Sprintf0d(result,date.GetSecond(),2);
-
-        result += " " + date.GetYear().ToString();
-        
-        return result;
-    }
-
-    /**
-     * @brief Converts this Date object to a String of the form:
-     *
-     *                         YYYY.MM.DD-hh.mm.ss
-     * 
-     * @return a string representation of this date.
-     */
-    string toString1()
-    {
-        //"YYYY.MM.DD-hh.mm.ss";
-
-        DataTime date = Now();
-        string result = "";
-
-        result += date.GetYear().ToString() + ".";
-        
-        Sprintf0d(result,date.GetMonth(),2);
-        result += ".";
-
-        Sprintf0d(result,date.GetDay(),2);
-        result += ".";
-
-        Sprintf0d(result,date.GetHour(),2);
-        result += ".";
-
-        Sprintf0d(result,date.GetMinute(),2);
-        result += ".";
-
-        Sprintf0d(result,date.GetSecond(),2);
-        
-        return result;
-    }
-};
-
