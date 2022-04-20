@@ -1,5 +1,11 @@
 <h1 align="center">DFramework</h1>
 
+<p align="center">
+<h3>That's how many people are interested in my framework</h3>
+
+![Visitor Count](https://profile-counter.glitch.me/DFramework/count.svg)
+</p>
+
 I created it for my projects, but this does not mean that others cannot use it, maybe you will find something useful here ¯\_(ツ)_/¯
 
 <p align="center">
