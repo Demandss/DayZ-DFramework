@@ -7,22 +7,18 @@ class DataTime
     protected int m_Minute;
     protected int m_Second;
 
-    static DataTime Now()
-    {
-        DataTime data = new DataTime();
-        
-        GetYearMonthDayUTC(data.m_Year,data.m_Month,data.m_Day);
-        GetHourMinuteSecondUTC(data.m_Hour,data.m_Minute,data.m_Second);
-
-        return data;
+    void DataTime()
+    {        
+        GetYearMonthDayUTC(m_Year,m_Month,m_Day);
+        GetHourMinuteSecondUTC(m_Hour,m_Minute,m_Second);
     };
 
-    static int GetYear() {return m_Year;};
-    static int GetMonth() {return m_Month;};
-    static int GetDay() {return m_Day;};
-    static int GetHour() {return m_Hour;};
-    static int GetMinute() {return m_Minute;};
-    static int GetSecond() {return m_Second;};
+    int GetYear() {return m_Year;};
+    int GetMonth() {return m_Month;};
+    int GetDay() {return m_Day;};
+    int GetHour() {return m_Hour;};
+    int GetMinute() {return m_Minute;};
+    int GetSecond() {return m_Second;};
 
     int GetTimeByType(TimeType type)
     {
@@ -93,7 +89,7 @@ class DataTime
         {
             n *= 10;
         }
-        for (int i = 1; i < width && d < n; i++)
+        for (int j = 1; j < width && d < n; j++)
         {
             str += "0";
             n /= 10;
@@ -108,28 +104,27 @@ class DataTime
      * 
      * @return a string representation of this date.
      */
-    string toString()
+    string ToString1()
     {
         //"MM DD hh:mm:ss YYYY";
 
-        DataTime date = Now();
         string result = "";
         
-        Sprintf0d(result,date.GetMonth(),2);
+        Sprintf0d(result,GetMonth(),2);
         result += " ";
 
-        Sprintf0d(result,date.GetDay(),2);
+        Sprintf0d(result,GetDay(),2);
         result += " ";
 
-        Sprintf0d(result,date.GetHour(),2);
+        Sprintf0d(result,GetHour(),2);
         result += ":";
 
-        Sprintf0d(result,date.GetMinute(),2);
+        Sprintf0d(result,GetMinute(),2);
         result += ":";
 
-        Sprintf0d(result,date.GetSecond(),2);
+        Sprintf0d(result,GetSecond(),2);
 
-        result += " " + date.GetYear().ToString();
+        result += " " + GetYear().ToString();
         
         return result;
     };
@@ -141,28 +136,27 @@ class DataTime
      * 
      * @return a string representation of this date.
      */
-    string toString1()
+    string ToString2()
     {
         //"YYYY.MM.DD-hh.mm.ss";
 
-        DataTime date = Now();
         string result = "";
 
-        result += date.GetYear().ToString() + ".";
+        result += GetYear().ToString() + ".";
         
-        Sprintf0d(result,date.GetMonth(),2);
+        Sprintf0d(result,GetMonth(),2);
         result += ".";
 
-        Sprintf0d(result,date.GetDay(),2);
+        Sprintf0d(result,GetDay(),2);
         result += ".";
 
-        Sprintf0d(result,date.GetHour(),2);
+        Sprintf0d(result,GetHour(),2);
         result += ".";
 
-        Sprintf0d(result,date.GetMinute(),2);
+        Sprintf0d(result,GetMinute(),2);
         result += ".";
 
-        Sprintf0d(result,date.GetSecond(),2);
+        Sprintf0d(result,GetSecond(),2);
         
         return result;
     };

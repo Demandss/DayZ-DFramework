@@ -13,7 +13,7 @@ class DFile
         string fileName;
         FileAttr fileAttr;
 
-        FindFileHandler handler = FindFile(path,fileName,fileAttr, FindFileFlags.ALL);
+        FindFileHandle handler = FindFile(path,fileName,fileAttr, FindFileFlags.ALL);
 
         if (!handler) return;
 
@@ -24,7 +24,11 @@ class DFile
 
     string GetDirectory() { return directory; };
 
+    string GetFullDirectory() { return directory + filename + extension; };
+
     string GetFilename() { return filename; };
+
+    string GetFullFilename() { return filename + extension; };
 
     string GetExtension() { return extension; };
 

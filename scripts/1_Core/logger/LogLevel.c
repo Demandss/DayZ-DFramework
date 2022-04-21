@@ -62,19 +62,19 @@ class LogLevel
      */
     static const LogLevel NONE = new LogLevel("",LogType.NONE);
 
-    private static const array<LogType> standardLevels = {
+    private static const autoptr array<LogType> standardLevels = {
         LogType.DEBUG, LogType.INFO, LogType.WARNING, LogType.ERROR, LogType.NONE
     };
 
-    protected Level(string _name, int _value)
+    protected void LogLevel(string _name, int _value)
     {
         name = _name;
         value = _value;
     };
 
-    static string GetName() {return name;};
+    string GetName() {return name;};
 
-    void string ToString() {return name;};
+    string ToString1() {return name;};
 
-    static int intValue() {return value;};
+    int GetValue() {return value;};
 };

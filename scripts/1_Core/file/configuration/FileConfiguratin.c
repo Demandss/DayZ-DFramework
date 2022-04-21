@@ -27,7 +27,7 @@ class FileConfiguratin
      * 
      * @return FileConfiguratinJSON 
      */
-    static FileConfiguratinJSON JSON()
+    static FileConfiguratinJSON JSON(string filename)
     {
         if (!_FileConfigJSON) _FileConfigJSON = new FileConfiguratinJSON(filename);
         return _FileConfigJSON;
@@ -36,19 +36,15 @@ class FileConfiguratin
 
 class FileConfiguratinBase
 {
-    protected filename;
-
-    
+    protected string filename;
 }
 
 class FileConfiguratinBinary extends FileConfiguratinBase
 {
-    protected filename;
-
-    void FileConfiguratinBinary(string configFileName) { super(configFileName); };
+    void FileConfiguratinBinary(string _fileName) { filename = _fileName; };
 }
 
 class FileConfiguratinJSON extends FileConfiguratinBase
 {
-
+    void FileConfiguratinJSON(string _fileName) { filename = _fileName; };
 }

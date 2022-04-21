@@ -5,32 +5,30 @@
 
 class Logger
 {
-    private const string LOG_FOLDER = "$profile:logs";
-    private const string LOG_PREVIUS_FILENAME = "log-%1.oldlog";
-    private const string LOG_FILENAME = "latest.log";
+    private static const string LOG_FOLDER = "$profile:logs";
+    private static const string LOG_PREVIUS_FILENAME = "log-%1.oldlog";
+    private static const string LOG_FILENAME = "latest.log";
 
-    private const string LOG_PREFIX = "[%1]";
+    private static const string LOG_PREFIX = "[%1]";
 
-    private bool canInitialize = true;
+    private static bool canInitialize = true;
     private static FileHandle currentLogFile;
     
     void ~Logger()
     {
-        if (!CanInitialize()) return;
+        if (!isCancelled()) return;
 
         FPrintln(currentLogFile, "***Logger successfully deinitialized***");
-
-        currentLogFile.Close();
     };
 
     /**
      * @brief needed only to create a log folder and file
      */
-    static Initialize()
+    static void Initialize()
     {
         if (!FileExist(LOG_FOLDER)) MakeDirectory(LOG_FOLDER);
 
-        if (!CanInitialize()) return;
+        if (!isCancelled()) return;
 
         string filePath = LOG_FOLDER + LOG_FILENAME;
         string previusFilePath = LOG_FOLDER + LOG_PREVIUS_FILENAME;
@@ -41,9 +39,9 @@ class Logger
         }
         else
         {
-            DataTime data = DataTime.Now();
+            DataTime data = DataTime();
 
-            CopyFile(filePath,string.Format(previusFilePath,data.toString1()));
+            CopyFile(filePath,string.Format(previusFilePath,data.ToString2()));
             DeleteFile(filePath);
 
             currentLogFile = OpenFile(filePath,FileMode.WRITE);
@@ -52,20 +50,20 @@ class Logger
         FPrintln(currentLogFile, "***Logger successfully initialized***");
     };
 
-    static bool CanInitialize() {return canInitialize;};
+    static bool isCancelled() {return canInitialize;};
 
     /**
      * @brief Allows to stop the logger at the conception level if pass "true" 
      * 
      * @param var 
      */
-    static void SetCanseleble(bool var) {canInitialize = !var};
+    static void SetCancelled(bool var) {canInitialize = !var};
 
     static void Log(LogLevel level, string message)
     {
-        if (!CanInitialize()) return;
-
-        string msg = string.Format(LOG_PREFIX,level.GetName());
+        if (!isCancelled()) return;
+        string name = level.GetName();
+        string msg = string.Format(LOG_PREFIX,name);
         msg += message;
 
         GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).Call(LogThreaded,msg);

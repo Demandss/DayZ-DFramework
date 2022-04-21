@@ -24,8 +24,7 @@ class TimeUtility
         if (year % 100 == 0) return true;
         if (year % 4 == 0) return true;
         return false;
-    }; 
-    
+    };
 
     /**
      * @brief 
@@ -43,8 +42,8 @@ class TimeUtility
         int minute;
         int second;
 
-        DataTime data = new DataTime.Now();
-        GetYearMonthDayHourMinuteSecondUTC(year,month,day,hour,minute,second);
+        DataTime data = new DataTime();
+        data.GetYearMonthDayHourMinuteSecondUTC(year,month,day,hour,minute,second);
 
         int time;
 
@@ -92,8 +91,18 @@ class TimeUtility
      */
     static string TimeConverter(int seconds)
     {
-        const string[8] words = {"#timeform_second_type_","#timeform_minute_type_","#timeform_hour_type_","#timeform_day_type_","#timeform_week_type_","#timeform_month_type_","#timeform_year_type_","#timeform_century_"}; 
-        const int[8] time = {SECOND_CENTURY,SECOND_YEAR,SECOND_MOUNTH,SECOND_WEEK,SECOND_DAY, SECOND_HOUR, SECOND_MINUTE,1};
+        const array<string> words = {
+            "#timeform_second_type_","#timeform_minute_type_",
+            "#timeform_hour_type_","#timeform_day_type_",
+            "#timeform_week_type_","#timeform_month_type_",
+            "#timeform_year_type_","#timeform_century_"
+        }; 
+        const array<int> time = {
+            SECOND_CENTURY, SECOND_YEAR,
+            SECOND_MOUNTH, SECOND_WEEK, 
+            SECOND_DAY, SECOND_HOUR, 
+            SECOND_MINUTE, 1
+        };
         
         string result = "";
         
@@ -121,48 +130,44 @@ class TimeUtility
         return result;
     };
 
-    static string CurrentTimeByMask(string mask)
+    static string CurrentTimeByMask(TimeMask mask)
     {
-        return TimeByMask(mask,DataTime.Now());
+        return TimeByMask(mask,new DataTime());
     };
 
     static string TimeByMask(TimeMask mask, DataTime time)
     {
+        bool masked = false;
         string selectedMask = "";
         map<TimeType, string> timeDeterminants = new map<TimeType, string>;
 
-        switch (mask)
+        if (mask == TimeMask.TIME)
         {
-            case TimeMask.TIME:
-            {
-                selectedMask = TIME_MASK;
-                timeDeterminants.Insert(TimeType.HOUR,"hh");
-                timeDeterminants.Insert(TimeType.MINUTE,"mm");
-                timeDeterminants.Insert(TimeType.SECOND,"ss");
-                break;
-            };
-            case TimeMask.DATE:
-            {
-               selectedMask = DATE_MASK;
-               timeDeterminants.Insert(TimeType.YEAR,"YYYY");
-               timeDeterminants.Insert(TimeType.MONTH,"MM");
-               timeDeterminants.Insert(TimeType.DAY,"DD");
-            break;
-            };
-            case TimeMask.DATETIME:
-            {
-               selectedMask = DATETIME_MASK;
-               timeDeterminants.Insert(TimeType.YEAR,"YYYY");
-               timeDeterminants.Insert(TimeType.MONTH,"MM");
-               timeDeterminants.Insert(TimeType.DAY,"DD");
-               timeDeterminants.Insert(TimeType.HOUR,"hh");
-               timeDeterminants.Insert(TimeType.MINUTE,"mm");
-               timeDeterminants.Insert(TimeType.SECOND,"ss");
-            break;
-            };
-        };
-
-        return TimeByCustomMask(selectedMask, separator, time);
+            selectedMask = TIME_MASK;
+            timeDeterminants.Insert(TimeType.HOUR,"hh");
+            timeDeterminants.Insert(TimeType.MINUTE,"mm");
+            timeDeterminants.Insert(TimeType.SECOND,"ss");
+            masked = true;
+        }
+        if (!masked && mask == TimeMask.DATE)
+        {
+            selectedMask = DATE_MASK;
+            timeDeterminants.Insert(TimeType.YEAR,"YYYY");
+            timeDeterminants.Insert(TimeType.MONTH,"MM");
+            timeDeterminants.Insert(TimeType.DAY,"DD");
+            masked = true;
+        }
+        if (!masked && mask == TimeMask.DATETIME)
+        {
+            selectedMask = DATETIME_MASK;
+            timeDeterminants.Insert(TimeType.YEAR,"YYYY");
+            timeDeterminants.Insert(TimeType.MONTH,"MM");
+            timeDeterminants.Insert(TimeType.DAY,"DD");
+            timeDeterminants.Insert(TimeType.HOUR,"hh");
+            timeDeterminants.Insert(TimeType.MINUTE,"mm");
+            timeDeterminants.Insert(TimeType.SECOND,"ss");
+        }
+        return TimeByCustomMask(selectedMask, timeDeterminants, time);
     };
 
     static string TimeByCustomMask(string mask, map<TimeType, string> determinants, DataTime time) 
@@ -174,7 +179,7 @@ class TimeUtility
         {
             if (determinants.Contains(type))
             {
-                result.Replace(determinants.Get(type),time.GetTimeByType(type));
+                result.Replace(determinants.Get(type),time.GetTimeByType(type).ToString());
             }
         }
         return result;

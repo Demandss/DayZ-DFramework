@@ -1,6 +1,6 @@
 modded class MissionServer
 {
-    Bootstrap bootstrap;
+    ref Bootstrap bootstrap;
 
     void MissionServer()
     {
