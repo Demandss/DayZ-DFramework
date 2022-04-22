@@ -33,18 +33,3 @@ class FileConfiguratin
         return _FileConfigJSON;
     };
 };
-
-class FileConfiguratinBase
-{
-    protected string filename;
-}
-
-class FileConfiguratinBinary extends FileConfiguratinBase
-{
-    void FileConfiguratinBinary(string _fileName) { filename = _fileName; };
-}
-
-class FileConfiguratinJSON extends FileConfiguratinBase
-{
-    void FileConfiguratinJSON(string _fileName) { filename = _fileName; };
-}

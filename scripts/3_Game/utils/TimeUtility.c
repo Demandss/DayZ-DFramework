@@ -4,13 +4,14 @@ class TimeUtility
     static const int EPOCH_MONTH = 1;
     static const int EPOCH_DAY = 1;
 
-    static const int SECOND_CENTURY = 3153600000;
-    static const int SECOND_YEAR = 31536000;
-    static const int SECOND_MOUNTH = 2592000;
-    static const int SECOND_WEEK = 604800;
-    static const int SECOND_DAY = 86400;
-    static const int SECOND_HOUR = 3600;
-    static const int SECOND_MINUTE = 60;
+    static const int MILLIS_CENTURY = 3153600000000;
+    static const int MILLIS_YEAR = 31536000000;
+    static const int MILLIS_MOUNTH = 2592000000;
+    static const int MILLIS_WEEK = 604800000;
+    static const int MILLIS_DAY = 86400000;
+    static const int MILLIS_HOUR = 3600000;
+    static const int MILLIS_MINUTE = 60000;
+    static const int MILLIS_SECOND = 1000;
 
     static const int DAYS_IN_MONTH[12] = {31,28,31,30,31,30,31,31,30,31,30,31};
 
@@ -29,10 +30,10 @@ class TimeUtility
     /**
      * @brief 
      * 
-     * @return the difference, measured in milliseconds but i'm in seconds, 
+     * @return the difference, measured in milliseconds, 
      * between the current time and midnight, January 1, 1970 UTC.
      */
-    static int CurrentTimeSeconds()
+    static int CurrentTimeMillis()
     {
         int year;
         int month;
@@ -51,11 +52,11 @@ class TimeUtility
         {
             if (IsLeapYear(iYear))
             {
-                time += SECOND_YEAR + SECOND_DAY;
+                time += MILLIS_YEAR + MILLIS_DAY;
             }
             else
             {
-                time += SECOND_YEAR;
+                time += MILLIS_YEAR;
             }
         };
 
@@ -65,31 +66,31 @@ class TimeUtility
         {
             if (isLeapYear && iMonth == 2)
             {
-                time += SECOND_DAY;
+                time += MILLIS_DAY;
             }
-            time += DAYS_IN_MONTH[iMonth - 1] * SECOND_DAY;
+            time += DAYS_IN_MONTH[iMonth - 1] * MILLIS_DAY;
         };
 
         for (int iDay = EPOCH_DAY; iDay < day; iDay++)
         {
-            time += SECOND_DAY;
+            time += MILLIS_DAY;
         };
 
-        time += hour * SECOND_HOUR;
-        time += minute * SECOND_MINUTE;
-        time += hour * SECOND_HOUR;
-        time += second;
+        time += hour * MILLIS_HOUR;
+        time += minute * MILLIS_MINUTE;
+        time += hour * MILLIS_HOUR;
+        time += second * MILLIS_SECOND;
 
         return time;
     };
 
     /**
-     * @brief turns seconds into a string with time.
+     * @brief turns milliseconds into a string with time.
      * 
      * @param seconds 
      * @return "10 seconds 20 minutes 234 years"
      */
-    static string TimeConverter(int seconds)
+    static string TimeConverter(int milliseconds)
     {
         const array<string> words = {
             "#timeform_second_type_","#timeform_minute_type_",
@@ -98,10 +99,10 @@ class TimeUtility
             "#timeform_year_type_","#timeform_century_"
         }; 
         const array<int> time = {
-            SECOND_CENTURY, SECOND_YEAR,
-            SECOND_MOUNTH, SECOND_WEEK, 
-            SECOND_DAY, SECOND_HOUR, 
-            SECOND_MINUTE, 1
+            MILLIS_CENTURY, MILLIS_YEAR,
+            MILLIS_MOUNTH, MILLIS_WEEK, 
+            MILLIS_DAY, MILLIS_HOUR, 
+            MILLIS_MINUTE, 1
         };
         
         string result = "";
