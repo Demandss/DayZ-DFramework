@@ -27,25 +27,8 @@ class TimeUtility
         return false;
     };
 
-    /**
-     * @brief 
-     * 
-     * @return the difference, measured in milliseconds, 
-     * between the current time and midnight, January 1, 1970 UTC.
-     */
-    static int CurrentTimeMillis()
+    private static int CalculateYMDToMillis(int year, int month, int day)
     {
-        int year;
-        int month;
-        int day;
-
-        int hour;
-        int minute;
-        int second;
-
-        DataTime data = new DataTime();
-        data.GetYearMonthDayHourMinuteSecondUTC(year,month,day,hour,minute,second);
-
         int time;
 
         for (int iYear = EPOCH_YEAR; iYear < year; iYear++)
@@ -76,9 +59,58 @@ class TimeUtility
             time += MILLIS_DAY;
         };
 
+        return time;
+    };
+
+    /**
+     * @brief 
+     * 
+     * @return Current world time in milliseconds.
+     */
+    static int CurrenWorldTimeMillis()
+    {
+        int year;
+		int month;
+		int day;
+
+		int hour;
+		int minute;
+        
+        GetGame().GetWorld().GetDate(year, month, day, hour, minute);
+
+        int time;
+
+        time += CalculateYMDToMillis(year,month,day);
         time += hour * MILLIS_HOUR;
         time += minute * MILLIS_MINUTE;
+
+        return time;
+    }
+
+    /**
+     * @brief 
+     * 
+     * @return the difference, measured in milliseconds, 
+     * between the current time and midnight, January 1, 1970 UTC.
+     */
+    static int CurrentTimeMillis()
+    {
+        int year;
+        int month;
+        int day;
+
+        int hour;
+        int minute;
+        int second;
+
+        DataTime data = new DataTime();
+        data.GetYearMonthDayHourMinuteSecondUTC(year,month,day,hour,minute,second);
+
+        int time;
+
+        time += CalculateYMDToMillis(year,month,day);
         time += hour * MILLIS_HOUR;
+        time += minute * MILLIS_MINUTE;
         time += second * MILLIS_SECOND;
 
         return time;

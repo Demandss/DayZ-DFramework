@@ -6,7 +6,7 @@
 class Logger
 {
     private static const string LOG_FOLDER = "$profile:logs";
-    private static const string LOG_PREVIUS_FILENAME = "log-%1.oldlog";
+    private static const string LOG_PREVIUS_FILENAME = "log-%1.log";
     private static const string LOG_FILENAME = "latest.log";
 
     private static const string LOG_PREFIX = "[%1]";

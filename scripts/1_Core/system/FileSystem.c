@@ -9,11 +9,40 @@ class FileSystem
     private string ALT_SEPARATOR = "\\";
     private string SEMICOLON = ";";
 
+    protected string directory;
+    protected string filename;
+    protected string extension;
+
     bool IsSlash(string s) { return (s == ALT_SEPARATOR) || (s == SEPARATOR);};
 
     string GetSeparator() { return SEPARATOR;};
 
     string GetPathSeparator() { return SEMICOLON;};
+
+    string GetFileName() { return filename; };
+	
+    string GetExtension() { return extension; };
+
+    string GetFullFileName() { return filename + extension; };
+
+    string GetDirectory() { return directory; };
+
+    string GetPath() { return GetDirectory() + GetFullFileName(); };
+
+    void SetFilename(string name) 
+    {
+        int index = name.LastIndexOf(".");
+        if (index == -1)
+        {
+            filename = name;
+            extension = "";
+            return;
+        }
+        extension = name.Substring(index, name.Length() - index);
+        filename = name.Substring(0,name.Length() - extension.Length());
+    };
+
+    void SetDirectory(string path) {directory = path; };
 
 	/**
 	 * @brief Retrieves a directory from a path to a file
@@ -61,5 +90,33 @@ class FileSystem
 		}
 		CloseFindFile(handle);
 		return true;
+	};
+
+	/**
+	 * @brief allows you to create a file
+	 * 
+	 * @param path is full path to the file
+	 */
+	static void CreateFile(string path)
+	{
+		FileHandle file = OpenFile(path, FileMode.WRITE);
+		if (file == 0) return;
+		CloseFile(file);
+	};
+
+	/**
+	 * @brief Recreates the file by returning a FileHandle, 
+	 *        don't forget to close it after use with "CloseFile"
+	 * 
+	 * @param path is full path to the file
+	 * @return FileHandle 
+	 */
+	static FileHandle RecreateFile(string path)
+	{
+		if(FileExist(path))
+		{
+			DeleteFile(path);			
+		}
+		return OpenFile(path, FileMode.WRITE);
 	};
 };

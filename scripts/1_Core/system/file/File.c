@@ -5,9 +5,6 @@
 
 class DFile extends FileSystem
 {
-    protected string directory;
-    protected string filename;
-    protected string extension;
     protected FileAttr attributes;
     
     void DFile(string path = "")
@@ -25,9 +22,7 @@ class DFile extends FileSystem
         
         if (!handler) 
         {
-            FileHandle file = OpenFile(path, FileMode.WRITE);
-            if (file == 0) return;
-            CloseFile(file);
+            CreateFile(path);
         }
 
         SetFileName(fileName);
@@ -37,16 +32,6 @@ class DFile extends FileSystem
         CloseFindFile(handler);
     };
 
-    string GetDirectory() { return directory; };
-
-    string GetFullDirectory() { return directory + filename + extension; };
-
-    string GetFileName() { return filename; };
-
-    string GetFullFileName() { return filename + extension; };
-
-    string GetExtension() { return extension; };
-
     bool IsDirectory() { return (attributes & FileAttr.DIRECTORY) != 0; };
 
     bool IsHidden() { return (attributes & FileAttr.HIDDEN) != 0;};
@@ -54,21 +39,6 @@ class DFile extends FileSystem
     bool IsReadOnly() { return (attributes & FileAttr.READONLY) != 0;};
 
     bool IsValid() { return (attributes & FileAttr.INVALID) != 0;};
-
-    void SetDirectory(string path) {directory = path; };
-
-    void SetFilename(string name) 
-    {
-        int index = name.LastIndexOf(".");
-        if (index == -1)
-        {
-            filename = name;
-            extension = "";
-            return;
-        }
-        extension = name.Substring(index, name.Length() - index);
-        filename = name.Substring(0,name.Length() - extension.Length());
-    };
 
     void SetAttributes(FileAttr attr) { attributes = attr;};
 
@@ -171,4 +141,10 @@ class DFile extends FileSystem
     {
         return string.Format("{path=%1;filename=%2;directory=%3;hidden=%4;readonly=%5;valid=%6}",GetFullDirectory(),GetFileName(),GetDirectory(),IsHidden(),IsReadOnly(),IsValid());
     };
+
+    override static bool GetFiles(string path, out array<ref DFile> files, FindFileFlags flag = FindFileFlags.ALL)
+	{
+        Logger.Warning("You can't get a list of files from %1!",this);
+        return false;
+    }
 };
