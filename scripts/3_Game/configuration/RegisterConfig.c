@@ -38,7 +38,7 @@ class RegisterConfig<Class T>
     * @brief needed to register JSON configuration files example:
     *  
     *  @code
-    *      [RegisterConfig<TestConfigData>.Binary("test/config.json")]
+    *      [RegisterConfig<TestConfigData>.Binary("test/config.cfg")]
     *      class TestConfigData
     *      {
     *          protected string text;
@@ -61,21 +61,5 @@ class RegisterConfig<Class T>
     {
         BinaryConfigMaker<T> configMaker = new BinaryConfigMaker<T>;
         configMaker.Register(path);
-    };
-};
-
-[RegisterConfig<TestConfigData>.Json("test/config.json")]
-class TestConfigData
-{
-    protected string text;
-
-    void TestConfigData(string _text = "I can't even imagine what should be here")
-    {
-        text = _text;
-    };
-
-    string GetText()
-    {
-        return text;
     };
 };
