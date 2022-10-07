@@ -6,9 +6,9 @@
 class FileConfigurationBase extends FileSystem
 {
     const string CONFIG_FILE_PATH = "$profile:config/";
-    const string CONFIG_FILE_EXTENSION = ".cfg";
+    const string STANDART_CONFIG_FILE_EXTENSION = ".cfg";
 
-    private string subFolder = "";
+    private static string subFolder = "";
 
     void FileConfigurationBase()
     {
@@ -17,31 +17,33 @@ class FileConfigurationBase extends FileSystem
 
     string GetSubFolder() { return subFolder; };
 
-    void SetSubFolder(string path)
+    void SetSubFolder(DString path)
     {
-        int index = path.LastIndexOf(GetSeparator());
+        int index = path.dLastIndexOf(GetSeparator());
         if (index == -1) 
         {
             SetFileName(path);
             return;
         }
-        SetFileName(path.Substring(index, path.Length()));
-        subFolder = path.Substring(0,index)
+        SetFileName(path.Substring(index+1, path.Length() - (index+1)));
+        subFolder = path.Substring(0,index+1);
     };
 
     override string GetDirectory() { return CONFIG_FILE_PATH + subFolder; }
     
-    override void SetFilename(string name) 
+    override void SetFileName(DString name) 
     {
-        int index = name.LastIndexOf(".");
+        //is a temporary line until they fix this method themselves | 09/02/2022
+		int index = name.dLastIndexOf(".");
+
+        //int index = name.LastIndexOf(".");
         if (index == -1)
         {
             filename = name;
-            extension = CONFIG_FILE_EXTENSION;
+            extension = STANDART_CONFIG_FILE_EXTENSION;
             return;
         }
         extension = name.Substring(index, name.Length() - index);
         filename = name.Substring(0,name.Length() - extension.Length());
-        extension = CONFIG_FILE_EXTENSION;
     };
 };

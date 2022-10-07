@@ -60,12 +60,12 @@ class DataTime
 
     void GetYearMonthDayHourMinuteSecondUTC(out int year, out int month, out int day, out int hour, out int minute, out int second) 
     {
-       year = m_Year;
-       month = m_Month;
-       day = m_Day;
-       hour = m_Hour;
-       minute = m_Minute;
-       second = m_Second;
+        year = m_Year;
+        month = m_Month;
+        day = m_Day;
+        hour = m_Hour;
+        minute = m_Minute;
+        second = m_Second;
     };
 
     /**
@@ -132,29 +132,27 @@ class DataTime
     /**
      * @brief Converts this Date object to a String of the form:
      *
-     *                         YYYY.MM.DD-hh.mm.ss
+     *                         YYYY-MM-DD_hh-mm-ss
      * 
      * @return a string representation of this date.
      */
     string ToString2()
     {
-        //"YYYY.MM.DD-hh.mm.ss";
-
         string result = "";
 
-        result += GetYear().ToString() + ".";
+        result += GetYear().ToString() + "-";
         
         Sprintf0d(result,GetMonth(),2);
-        result += ".";
+        result += "-";
 
         Sprintf0d(result,GetDay(),2);
-        result += ".";
+        result += "_";
 
         Sprintf0d(result,GetHour(),2);
-        result += ".";
+        result += "-";
 
         Sprintf0d(result,GetMinute(),2);
-        result += ".";
+        result += "-";
 
         Sprintf0d(result,GetSecond(),2);
         

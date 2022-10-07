@@ -7,13 +7,13 @@ class DFile extends FileSystem
 {
     protected FileAttr attributes;
     
-    void DFile(string path = "")
+    void DFile(DString path = "")
     {
-        if (path == string.Empty) return;
+        if (path == DString.Empty) return;
 
-        string dir = GetDirectory(path);
+        DString dir = GetDirectory(path);
 
-        if (!FileExist(dir)) MakeDirectory(dir);
+        GenerateDirectory(dir);
 
         string fileName;
         FileAttr fileAttr;
@@ -22,12 +22,13 @@ class DFile extends FileSystem
         
         if (!handler) 
         {
-            CreateFile(path);
+            this.CreateFile(path);
+            handler = FindFile(path,fileName,fileAttr, FindFileFlags.ALL);
         }
 
-        SetFileName(fileName);
-        SetAttributes(fileAttr);
-        SetDirectory(dir);
+        this.SetFileName(fileName);
+        this.SetAttributes(fileAttr);
+        this.SetDirectory(dir);
         
         CloseFindFile(handler);
     };
@@ -42,17 +43,17 @@ class DFile extends FileSystem
 
     void SetAttributes(FileAttr attr) { attributes = attr;};
 
-    FileHandle OpenFile(FileMode mode)
+    FileHandle OpenDFile(FileMode mode)
     {
-        return OpenFile(GetFullDirectory(), mode);
+        return OpenFile(GetPath(), mode);
     };
 
-    void Print(void var)
+    void Print(string var)
     {
-        FileHandle file = OpenFile(FileMode.WRITE);
-	    if (file == 0)
-	    {
-		    Logger.Warning("Failed to write data to the file /%1/ it may be corrupted!",GetFullDirectory());
+        FileHandle file = OpenDFile(FileMode.WRITE);
+        if (file == 0)
+        {
+            GetLogger().Warning(string.Format("Failed to write data to the file /%1/ it may be corrupted!",GetPath()));
             return;
         }
 
@@ -60,12 +61,12 @@ class DFile extends FileSystem
 		CloseFile(file);
     };
 
-    void Println(void var)
+    void Println(string var)
     {
-        FileHandle file = OpenFile(FileMode.WRITE);
-	    if (file == 0)
-	    {
-		    Logger.Warning("Failed to write data to the file /%1/ it may be corrupted!",GetFullDirectory());
+        FileHandle file = OpenDFile(FileMode.WRITE);
+        if (file == 0)
+        {
+            GetLogger().Error(string.Format("Failed to write data to the file /%1/ it may be corrupted!",GetPath()));
             return;
         }
 
@@ -73,32 +74,52 @@ class DFile extends FileSystem
 		CloseFile(file);
     };
 
-    int Read(void param_array, int length)
+    int Read(out array<string> param_array, int length)
     {
-        FileHandle file = OpenFile(FileMode.READ);
-	    if (file == 0)
-	    {
-		    Logger.Warning("Failed to read data from the file /%1/ it may be corrupted!",GetFullDirectory());
+        FileHandle file = OpenDFile(FileMode.READ);
+        if (file == 0)
+        {
+            GetLogger().Error(string.Format("Failed to read data from the file /%1/ it may be corrupted!",GetPath()));
             return -1;
         }
 
         return ReadFile(file,param_array,length);
     };
 
+    ref array<string> ReadAll()
+    {
+        FileHandle file = OpenDFile(FileMode.READ);
+        if ( file == 0 )
+        {
+            GetLogger().Error(string.Format("Failed to read data from the file /%1/ it may be corrupted!",GetPath()));
+            return NULL;
+        }
+
+        string line_content;
+        ref array<string> file_content = new array<string>;
+
+        while ( FGets( file,  line_content ) >= 0 )
+        {
+            file_content.Insert(line_content);
+        }
+
+        return file_content;
+    }
+
     bool Rename(string name)
     {
         if (!IsValid()) return false;
 
-        if (FileExist(directory + name) || !CopyFile(GetFullDirectory(), directory + name))
+        if (FileExist(directory + name) || !CopyFile(GetPath(), directory + name))
         {
-            Logger.Warning("File already exists at /%1/",GetDirectory());
+            GetLogger().Error(string.Format("File already exists at /%1/",GetDirectory()));
             return false;
         }
     
-        if (!DeleteFile(GetFullDirectory()))
-            Logger.Warning("Failed to delete original file /%1/ to rename!",GetFullDirectory());
+        if (!DeleteFile(GetPath()))
+            GetLogger().Warning(string.Format("Failed to delete original file /%1/ to rename!",GetPath()));
 
-        SetFilename(name);
+        SetFileName(name);
 
         return true;
     };
@@ -107,16 +128,16 @@ class DFile extends FileSystem
     {
         if (!IsValid()) return false;
 
-        if (FileExist(path + filename) || !CopyFile(GetFullDirectory(), path + filename))
+        if (FileExist(path + filename) || !CopyFile(GetPath(), path + filename))
         {
-            Logger.Warning("File already exists at /%1/",path);
+            GetLogger().Error(string.Format("File already exists at /%1/",path));
             return false;
         }
 
-        if (!DeleteFile(GetFullDirectory()))
-            Logger.Warning("Failed to delete original file /%1/ to move!",GetFullDirectory());
+        if (!DeleteFile(GetPath()))
+            GetLogger().Warning(string.Format("Failed to delete original file /%1/ to move!",GetPath()));
 
-        SetFileName(fileName);
+        SetFileName(filename);
         SetDirectory(path);
 
         return true;
@@ -126,9 +147,9 @@ class DFile extends FileSystem
     {
         if (!IsValid()) return false;
 
-        if (FileExist(path + filename) || !CopyFile(GetFullDirectory(), path + filename))
+        if (FileExist(path + filename) || !CopyFile(GetPath(), path + filename))
         {
-            Logger.Warning("File already exists at /%1/",path);
+            GetLogger().Error(string.Format("File already exists at /%1/",path));
             return false;
         }
 
@@ -139,12 +160,12 @@ class DFile extends FileSystem
 
     override string GetDebugName()
     {
-        return string.Format("{path=%1;filename=%2;directory=%3;hidden=%4;readonly=%5;valid=%6}",GetFullDirectory(),GetFileName(),GetDirectory(),IsHidden(),IsReadOnly(),IsValid());
+        return string.Format("{path=%1;filename=%2;directory=%3;hidden=%4;readonly=%5;valid=%6}",GetPath(),GetFileName(),GetDirectory(),IsHidden(),IsReadOnly(),IsValid());
     };
 
-    override static bool GetFiles(string path, out array<ref DFile> files, FindFileFlags flag = FindFileFlags.ALL)
+    override static bool GetFiles(DString path, out array<DFile> files, FindFileFlags flag = FindFileFlags.ALL)
 	{
-        Logger.Warning("You can't get a list of files from %1!",this);
+        GetLogger().Warning("You can't get a list of files from DFile!");
         return false;
     }
 };

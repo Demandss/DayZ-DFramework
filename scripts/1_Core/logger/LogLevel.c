@@ -60,7 +60,7 @@ class LogLevel
     /**
      * @brief This is necessary to display any messages in the log file. This level is initialized to 0.
      */
-    static const LogLevel NONE = new LogLevel("",LogType.NONE);
+    static const LogLevel NONE = new LogLevel(string.Empty,LogType.NONE);
 
     private static const autoptr array<LogType> standardLevels = {
         LogType.DEBUG, LogType.INFO, LogType.WARNING, LogType.ERROR, LogType.NONE

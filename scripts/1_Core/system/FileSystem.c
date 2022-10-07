@@ -5,19 +5,19 @@
 
 class FileSystem
 {
-    private string SEPARATOR = "/";
-    private string ALT_SEPARATOR = "\\";
-    private string SEMICOLON = ";";
+    private static string SEPARATOR = "/";
+    private static string ALT_SEPARATOR = "\\";
+    private static string SEMICOLON = ";";
 
     protected string directory;
     protected string filename;
     protected string extension;
 
-    bool IsSlash(string s) { return (s == ALT_SEPARATOR) || (s == SEPARATOR);};
+    static bool IsSlash(string s) { return (s == ALT_SEPARATOR) || (s == SEPARATOR); };
 
-    string GetSeparator() { return SEPARATOR;};
+    static string GetSeparator() { return SEPARATOR; };
 
-    string GetPathSeparator() { return SEMICOLON;};
+    static string GetPathSeparator() { return SEMICOLON; };
 
     string GetFileName() { return filename; };
 	
@@ -29,9 +29,12 @@ class FileSystem
 
     string GetPath() { return GetDirectory() + GetFullFileName(); };
 
-    void SetFilename(string name) 
+    void SetFileName(DString name)
     {
-        int index = name.LastIndexOf(".");
+		//is a temporary line until they fix this method themselves | 09/02/2022
+		int index = name.dLastIndexOf(".");
+
+        //int index = name.LastIndexOf(".");
         if (index == -1)
         {
             filename = name;
@@ -42,21 +45,52 @@ class FileSystem
         filename = name.Substring(0,name.Length() - extension.Length());
     };
 
-    void SetDirectory(string path) {directory = path; };
+    void SetDirectory(string path) { directory = path; };
 
 	/**
 	 * @brief Retrieves a directory from a path to a file
 	 */
-    string GetDirectory(string path) 
+    string GetDirectory(DString path) 
     { 
-        path.Replace(ALT_SEPARATOR, SEPARATOR);
+        path.Replace(ALT_SEPARATOR, GetSeparator());
 
-        int index = path.IndexOf(SEPARATOR);
+        int index = path.dLastIndexOf(GetSeparator());
 
         if (index != -1)
-            return path.Substring(0,index) + SEPARATOR;
+            return path.Substring(0,index) + GetSeparator();
 
         return string.Empty;
+    };
+
+	void GenerateDirectory(DString path = string.Empty)
+    {
+		DString dir;
+		TStringArray folders = new TStringArray;
+
+		if (path == string.Empty)
+			dir = GetDirectory();
+		else
+			dir = GetDirectory(path);
+
+		if (dir.dCountChar(GetSeparator()) <= 1)
+		{
+			if (!FileExist(dir)) MakeDirectory(dir);
+			return;
+		}
+
+		dir.Split(GetSeparator(),folders);
+
+		string _folder = string.Empty;
+
+		foreach (string folder : folders)
+		{
+			string f_folder = _folder + GetSeparator() + folder;
+			if (!FileExist(f_folder)) 
+			{
+				MakeDirectory(f_folder);
+			}
+			_folder += folder + GetSeparator();
+		}
     };
 
 	/**
@@ -64,27 +98,35 @@ class FileSystem
 	 * 
 	 * @return Got it or not
 	 */
-    static bool GetFiles(string path, out array<ref DFile> files, FindFileFlags flag = FindFileFlags.ALL)
+    static bool GetFiles(DString path, out array<DFile> files, FindFileFlags flag = FindFileFlags.ALL)
 	{
-		if (!files) files = new array<ref DFile>();
+		if (!files) files = new array<DFile>();
 
-		path.Replace("\\", SEPARATOR);
+		path.Replace("\\", GetSeparator());
 
 		string fileName;
 		FileAttr fileAttr;
-		FindFileHandle handle = FindFile(path, fileName, fileAttr, flags);
+		string folder;
+		FindFileHandle handle = FindFile(path, fileName, fileAttr, flag);
 		if (!handle) return false;
 
-		string folder = GetDirectory(path);
+		path.Replace(ALT_SEPARATOR, GetSeparator());
+
+        int index = path.dLastIndexOf(GetSeparator());
+
+        if (index != -1)
+            folder = path.Substring(0,index) + GetSeparator();
+		else
+			folder = string.Empty;
 
 		while (true)
 		{
 			DFile file = new DFile();
-			file.SetFilename(fileName);
+			file.SetFileName(fileName);
 			file.SetDirectory(folder);
 			file.SetAttributes(fileAttr);
 
-			files += file;
+			files.Insert(file);
             
 			if (!FindNextFile(handle, fileName, fileAttr)) break;
 		}
@@ -97,7 +139,7 @@ class FileSystem
 	 * 
 	 * @param path is full path to the file
 	 */
-	static void CreateFile(string path)
+	static void CreateFile(DString path)
 	{
 		FileHandle file = OpenFile(path, FileMode.WRITE);
 		if (file == 0) return;
@@ -111,7 +153,7 @@ class FileSystem
 	 * @param path is full path to the file
 	 * @return FileHandle 
 	 */
-	static FileHandle RecreateFile(string path)
+	static FileHandle RecreateFile(DString path)
 	{
 		if(FileExist(path))
 		{

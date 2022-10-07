@@ -119,10 +119,10 @@ class TimeUtility
     /**
      * @brief turns milliseconds into a string with time.
      * 
-     * @param seconds 
+     * @param milliseconds 
      * @return "10 seconds 20 minutes 234 years"
      */
-    static string TimeConverter(int milliseconds)
+    static string TimeConverter(int seconds)
     {
         const array<string> words = {
             "#timeform_second_type_","#timeform_minute_type_",
