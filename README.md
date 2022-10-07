@@ -17,7 +17,7 @@ I created it for my projects, but this does not mean that others cannot use it, 
 <p align="center">
 </p>
 
-Please note this code is **not** permissable to repack in your mod, you need to include it as requiredAddons, and use the mod from SteamWorkshop on the server. You are not allowed to monetized this mod unless your mod is an **[Approved Monetized Server](https://www.bohemia.net)**. And access or use of this mod is not part of the monetization.
+Code is **not** permissable to repack in your mod, you need to include it as requiredAddons, and use the mod from SteamWorkshop on the server. You are not allowed to monetized this mod unless your mod is an **[Approved Monetized Server](https://www.bohemia.net)**. And access or use of this mod is not part of the monetization.
 
 ---
 
