@@ -17,35 +17,41 @@ class ConfigManager extends FileConfigurationBase
 
     /**
      * @brief updates data about your configs in memory.
-     * 
-     * @param data here we pass the initialized class.
      */
-    void UpdateData(string fileName, notnull Class data) 
+    void UpdateData(string fileName, notnull Class data, ConfigMaker cfgMaker = NULL) 
     {
         SetSubFolder(fileName);
 
         string directory = GetDirectory();
         string _fileName = GetFileName();
-        ref map<string, Class> T;
-        
-        if (m_ConfigDataBase.Find(directory,T))
+        ref map<string, Class> arr;
+
+        if (m_ConfigDataBase.Find(directory,arr))
         {
-            if (T.Contains(_fileName))
+            if (arr.Contains(_fileName))
             {
-                T.Set(_fileName,data);
+                arr.Set(_fileName,data);
             }
             else
             {
-                T.Insert(_fileName,data);
+                arr.Insert(_fileName,data);
             }
-            m_ConfigDataBase.Set(directory,T);
+            m_ConfigDataBase.Set(directory,arr);
         }
         else
         {
-            T = new map<string, Class>;
-            T.Insert(_fileName,data);
-            m_ConfigDataBase.Insert(directory,T);
+            arr = new map<string, Class>;
+            arr.Insert(_fileName,data);
+            m_ConfigDataBase.Insert(directory,arr);
         }
+
+        if (cfgMaker)
+            SetFileData(fileName,data,cfgMaker);
+    };
+
+    void SetFileData(string fileName, notnull Class data, ConfigMaker cfgMaker)
+    {
+        cfgMaker.SavingCrutch(fileName,data);
     };
 
     /**

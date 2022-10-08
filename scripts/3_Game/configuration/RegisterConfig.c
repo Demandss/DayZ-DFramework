@@ -38,7 +38,7 @@ class RegisterConfig<Class T>
     * @brief needed to register JSON configuration files example:
     *  
     *  @code
-    *      [RegisterConfig<TestConfigData>.Binary("test/config.cfg")]
+    *      [RegisterConfig<TestConfigData>.Binary("test/config.binary")]
     *      class TestConfigData
     *      {
     *          protected string text;

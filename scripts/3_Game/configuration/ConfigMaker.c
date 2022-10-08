@@ -8,9 +8,9 @@ Let's call it the cry of the soul..
 
 class ConfigMaker<Class T> extends FileConfigurationBase
 {
-    proto void Load(DString filename);
+    void Load(string fileName);
 
-    proto void Save(DString filename, notnull T data);
+    void Save(string fileName, notnull T data);
 
     void Register(DString fileName, notnull T data)
     {
@@ -22,12 +22,12 @@ class JsonConfigMaker<Class T> extends ConfigMaker<T>
 {
     protected static ref JsonSerializer m_Serializer = new JsonSerializer;
 
-    override Load(DString filename)
+    override Load(string fileName)
     {
         //Code
     };
 
-    override void Save(DString fileName, notnull T data)
+    override void Save(string fileName, notnull T data)
     {
         //Code
     };
@@ -36,7 +36,12 @@ class JsonConfigMaker<Class T> extends ConfigMaker<T>
 I don’t know who was responsible for the OOP, but he obviously doesn’t know something
 */
 
-class JsonConfigMaker<Class T> extends FileConfigurationBase
+class ConfigMaker extends FileConfigurationBase
+{
+    void SavingCrutch(string fileName, Class val);
+};
+
+class JsonConfigMaker<Class T> extends ConfigMaker
 {
     protected static ref JsonSerializer m_Serializer = new JsonSerializer;
 
@@ -79,12 +84,23 @@ class JsonConfigMaker<Class T> extends FileConfigurationBase
     };
 
     /**
+     * @brief The person in charge of the OOP I hate you, know this!
+     */
+    override void SavingCrutch(string fileName, Class val)
+    {
+        T data;
+        Class.CastTo(data,val);
+
+        Save(fileName, data, false);
+    }
+
+    /**
      * @brief save the data to a file and update it in memory.
      * 
-     * @param fileName is a path to a file like "/folder/filename.cfg".
+     * @param fileName is a path to a file like "/folder/filename.json".
      * @param data here we pass the initialized class.
      */
-    void Save(string fileName, T data)
+    void Save(string fileName, T data, bool updateData = true)
     {
         SetSubFolder(fileName);
         DString path = GetPath();
@@ -105,7 +121,10 @@ class JsonConfigMaker<Class T> extends FileConfigurationBase
 
         CloseFile( handle );
 
-        GetConfigManager().UpdateData(fileName,data);
+        if (updateData)
+        {
+            GetConfigManager().UpdateData(fileName,data);
+        }
     };
 
     /**
@@ -125,11 +144,13 @@ class JsonConfigMaker<Class T> extends FileConfigurationBase
             Load(fileName);
             return;
         }
-        Save(fileName,T.Spawn());
+        T data;
+        Class.CastTo(data,T.Spawn());
+        Save(fileName,data);
     };
 };
 
-class BinaryConfigMaker<Class T> extends FileConfigurationBase
+class BinaryConfigMaker<Class T> extends ConfigMaker
 {
     protected static ref FileSerializer m_Serializer = new FileSerializer;
 
@@ -155,12 +176,23 @@ class BinaryConfigMaker<Class T> extends FileConfigurationBase
     };
 
     /**
+     * @brief The person in charge of the OOP I hate you, know this!
+     */
+    override void SavingCrutch(string fileName, Class val)
+    {
+        T data;
+        Class.CastTo(data,val);
+
+        Save(fileName, data, false);
+    }
+
+    /**
      * @brief save the data to a file and update it in memory.
      * 
-     * @param fileName is a path to a file like "/folder/filename.cfg".
+     * @param fileName is a path to a file like "/folder/filename.binary".
      * @param data here we pass the initialized class.
      */
-    void Save(string fileName, notnull T data)
+    void Save(string fileName, notnull T data, bool updateData = true)
     {
         SetSubFolder(fileName);
         string path = GetPath();
@@ -173,7 +205,10 @@ class BinaryConfigMaker<Class T> extends FileConfigurationBase
 			m_Serializer.Write(data);
             m_Serializer.Close();
 
-            GetConfigManager().UpdateData(fileName,data);
+            if (updateData)
+            {
+                GetConfigManager().UpdateData(fileName,data);
+            }
 		}
     };
 
@@ -194,6 +229,8 @@ class BinaryConfigMaker<Class T> extends FileConfigurationBase
             Load(fileName);
             return;
         }
-        Save(fileName,T.Spawn());
+        T data;
+        Class.CastTo(data,T.Spawn());
+        Save(fileName,data);
     };
 };
