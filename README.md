@@ -44,3 +44,4 @@ Wiki: [link](https://demands.gitbook.io/dframework/)
 
 DayZ Wiki: [link](https://community.bistudio.com/wiki/Main_Page)
 
+SteamWorkshop: [link](https://steamcommunity.com/sharedfiles/filedetails/?id=2796703209)
