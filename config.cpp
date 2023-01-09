@@ -19,13 +19,18 @@ class CfgMods
 		author = "Demands";
 		overview = "powered by Demands";
 		type = "mod";
-		dependencies[] = {"Game","World","Mission"};
+		dependencies[] = {"Core","Game","World","Mission"};
 		class defs
 		{
 			class engineScriptModule
 			{
 				value = "";
 				files[] = {"DFramework/scripts/1_Core"};
+			};
+			class gameLibScriptModule
+			{
+				value = "";
+				files[] = {"DFramework/scripts/2_GameLib"};
 			};
 			class gameScriptModule
 			{
