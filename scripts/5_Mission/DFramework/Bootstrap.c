@@ -4,6 +4,7 @@ class Bootstrap
     {
         DFramework.InitializeLogger();
         DFramework.InitializeConfigManager();
+        DFramework.InitializeEventManager();
     };
 
     void Init()
@@ -13,6 +14,5 @@ class Bootstrap
 
     void PostInit()
     {
-    
     };
 };

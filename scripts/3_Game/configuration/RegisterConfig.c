@@ -28,7 +28,7 @@ class RegisterConfig<Class T>
     *  
     * @param fileName is a path to a file like "/folder/filename.cfg"
     */
-    static void Json(string path)
+    static void Json(string path/*TODO - , DExecuteSide side == DExecuteSide.Both */)
     {
         JsonConfigMaker<T> configMaker = new JsonConfigMaker<T>;
         configMaker.Register(path);
@@ -57,7 +57,7 @@ class RegisterConfig<Class T>
     *  
     * @param fileName is a path to a file like "/folder/filename.cfg"
     */
-    static void Binary(string path)
+    static void Binary(string path/*TODO - , DExecuteSide side == DExecuteSide.Both */)
     {
         BinaryConfigMaker<T> configMaker = new BinaryConfigMaker<T>;
         configMaker.Register(path);

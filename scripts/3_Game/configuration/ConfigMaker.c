@@ -63,7 +63,7 @@ class JsonConfigMaker<Class T> extends ConfigMaker
         FileHandle handle = OpenFile(path, FileMode.READ);
         if ( handle == 0 )
         {
-            GetLogger().Error(string.Format("I did not find JsonConfigMaker::Load(%1)",fileName));
+            GetDFLogger().Error(string.Format("I did not find JsonConfigMaker::Load(%1)",fileName));
             return;
         }
         
@@ -78,7 +78,7 @@ class JsonConfigMaker<Class T> extends ConfigMaker
             m_Serializer = new JsonSerializer;
         
         if( !m_Serializer.ReadFromString( data, file_content, warning ) )
-            GetLogger().Warning( warning );
+            GetDFLogger().Warning( warning );
 
         GetConfigManager().UpdateData(fileName,data);
     };
@@ -113,7 +113,7 @@ class JsonConfigMaker<Class T> extends ConfigMaker
         FileHandle handle = OpenFile( path, FileMode.WRITE );
         if ( handle == 0 )
         {
-            GetLogger().Error(string.Format("Something went wrong JsonConfigMaker::Save(%1,%2)",fileName,data));
+            GetDFLogger().Error(string.Format("Something went wrong JsonConfigMaker::Save(%1,%2)",fileName,data));
             return;
         }
 
@@ -131,9 +131,31 @@ class JsonConfigMaker<Class T> extends ConfigMaker
      * @brief needed to register and/or load configuration files.
      *
      * @param fileName is a path to a file like "/folder/filename.cfg".
-     * @param data here we pass the initialized class.
+     * //TODO - @param side where to create configuration.
      */
-    void Register(string fileName)
+    void Register(string fileName/*TODO - ,DExecuteSide side */)
+    {
+        /* switch(side) 
+        {
+            case DExecuteSide.Server:
+            {
+                if (( GetGame().IsServer() && GetGame().IsMultiplayer() ) || ( GetGame().IsServer() && !GetGame().IsMultiplayer() ))
+                    ExternalRegister(fileName);
+            };
+            case DExecuteSide.Client:
+            {
+                if (( GetGame().IsClient() && GetGame().IsMultiplayer() ) || ( GetGame().IsClient() && !GetGame().IsMultiplayer() )) 
+                    ExternalRegister(fileName);
+            };
+            default:
+            {
+                ExternalRegister(fileName);
+            };
+        } */
+        ExternalRegister(fileName);
+    };
+
+    void ExternalRegister(string fileName)
     {
         SetSubFolder(fileName);
         string path = GetPath();
@@ -216,13 +238,35 @@ class BinaryConfigMaker<Class T> extends ConfigMaker
      * @brief needed to register and/or load configuration files.
      *
      * @param fileName is a path to a file like "/folder/filename.cfg".
-     * @param data here we pass the initialized class.
+     * //TODO - @param side where to create configuration.
      */
-    void Register(string fileName)
+    void Register(string fileName,/*TODO - ,DExecuteSide side */)
+    {
+        /* switch(side) 
+        {
+            case DExecuteSide.Server:
+            {
+                if (( GetGame().IsServer() && GetGame().IsMultiplayer() ) || ( GetGame().IsServer() && !GetGame().IsMultiplayer() ))
+                    ExternalRegister(fileName);
+            };
+            case DExecuteSide.Client:
+            {
+                if (( GetGame().IsClient() && GetGame().IsMultiplayer() ) || ( GetGame().IsClient() && !GetGame().IsMultiplayer() )) 
+                    ExternalRegister(fileName);
+            };
+            default:
+            {
+                ExternalRegister(fileName);
+            };
+        } */
+        ExternalRegister(fileName);
+    };
+
+    void ExternalRegister(string fileName)
     {
         SetSubFolder(fileName);
         string path = GetPath();
-        
+
         GenerateDirectory(path);
         if (FileExist(path))
         {
@@ -232,5 +276,5 @@ class BinaryConfigMaker<Class T> extends ConfigMaker
         T data;
         Class.CastTo(data,T.Spawn());
         Save(fileName,data);
-    };
+    }
 };

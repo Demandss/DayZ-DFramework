@@ -4,14 +4,14 @@ class TimeUtility
     static const int EPOCH_MONTH = 1;
     static const int EPOCH_DAY = 1;
 
-    static const int MILLIS_CENTURY = 3153600000000;
-    static const int MILLIS_YEAR = 31536000000;
-    static const int MILLIS_MOUNTH = 2592000000;
-    static const int MILLIS_WEEK = 604800000;
-    static const int MILLIS_DAY = 86400000;
-    static const int MILLIS_HOUR = 3600000;
-    static const int MILLIS_MINUTE = 60000;
-    static const int MILLIS_SECOND = 1000;
+    static const int SECONDS_CENTURY = 3153600000;
+    static const int SECONDS_YEAR = 31536000;
+    static const int SECONDS_MOUNTH = 2628000;
+    static const int SECONDS_WEEK = 604800;
+    static const int SECONDS_DAY = 86400;
+    static const int SECONDS_HOUR = 3600;
+    static const int SECONDS_MINUTE = 60;
+    static const int SECOND = 1;
 
     static const int DAYS_IN_MONTH[12] = {31,28,31,30,31,30,31,31,30,31,30,31};
 
@@ -27,7 +27,7 @@ class TimeUtility
         return false;
     };
 
-    private static int CalculateYMDToMillis(int year, int month, int day)
+    static int CalculateYMDToSeconds(int year, int month, int day)
     {
         int time;
 
@@ -35,11 +35,11 @@ class TimeUtility
         {
             if (IsLeapYear(iYear))
             {
-                time += MILLIS_YEAR + MILLIS_DAY;
+                time += SECONDS_YEAR + SECONDS_DAY;
             }
             else
             {
-                time += MILLIS_YEAR;
+                time += SECONDS_YEAR;
             }
         };
 
@@ -49,14 +49,14 @@ class TimeUtility
         {
             if (isLeapYear && iMonth == 2)
             {
-                time += MILLIS_DAY;
+                time += SECONDS_DAY;
             }
-            time += DAYS_IN_MONTH[iMonth - 1] * MILLIS_DAY;
+            time += Math.AbsInt(DAYS_IN_MONTH[iMonth - 1] * SECONDS_DAY);
         };
 
         for (int iDay = EPOCH_DAY; iDay < day; iDay++)
         {
-            time += MILLIS_DAY;
+            time += SECONDS_DAY;
         };
 
         return time;
@@ -65,9 +65,9 @@ class TimeUtility
     /**
      * @brief 
      * 
-     * @return Current world time in milliseconds.
+     * @return Current world time in seconds.
      */
-    static int CurrenWorldTimeMillis()
+    static int CurrenWorldTimeSeconds()
     {
         int year;
 		int month;
@@ -80,9 +80,9 @@ class TimeUtility
 
         int time;
 
-        time += CalculateYMDToMillis(year,month,day);
-        time += hour * MILLIS_HOUR;
-        time += minute * MILLIS_MINUTE;
+        time += CalculateYMDToSeconds(year,month,day);
+        time += hour * SECONDS_HOUR;
+        time += minute * SECONDS_MINUTE;
 
         return time;
     }
@@ -90,10 +90,10 @@ class TimeUtility
     /**
      * @brief 
      * 
-     * @return the difference, measured in milliseconds, 
+     * @return the difference, measured in seconds, 
      * between the current time and midnight, January 1, 1970 UTC.
      */
-    static int CurrentTimeMillis()
+    static int CurrentTimeSeconds()
     {
         int year;
         int month;
@@ -108,18 +108,18 @@ class TimeUtility
 
         int time;
 
-        time += CalculateYMDToMillis(year,month,day);
-        time += hour * MILLIS_HOUR;
-        time += minute * MILLIS_MINUTE;
-        time += second * MILLIS_SECOND;
+        time += CalculateYMDToSeconds(year,month,day);
+        time += hour * SECONDS_HOUR;
+        time += minute * SECONDS_MINUTE;
+        time += second * SECOND;
 
         return time;
     };
 
     /**
-     * @brief turns milliseconds into a string with time.
+     * @brief turns seconds into a string with time.
      * 
-     * @param milliseconds 
+     * @param seconds 
      * @return "10 seconds 20 minutes 234 years"
      */
     static string TimeConverter(int seconds)
@@ -131,10 +131,10 @@ class TimeUtility
             "#timeform_year_type_","#timeform_century_"
         }; 
         const array<int> time = {
-            MILLIS_CENTURY, MILLIS_YEAR,
-            MILLIS_MOUNTH, MILLIS_WEEK, 
-            MILLIS_DAY, MILLIS_HOUR, 
-            MILLIS_MINUTE, 1
+            SECONDS_CENTURY, SECONDS_YEAR,
+            SECONDS_MOUNTH, SECONDS_WEEK, 
+            SECONDS_DAY, SECONDS_HOUR, 
+            SECONDS_MINUTE, SECOND
         };
         
         string result = "";

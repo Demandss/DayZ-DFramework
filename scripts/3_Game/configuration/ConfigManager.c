@@ -3,7 +3,7 @@
  at 5/10/2022
  */
 
-ref ConfigManager DF_ConfigManager;
+ref ConfigManager dfConfigManager;
 
 class ConfigManager extends FileConfigurationBase
 {
@@ -78,7 +78,7 @@ class ConfigManager extends FileConfigurationBase
         
         if (!_ConfigData)
         {
-            GetLogger().Error(string.Format("I did not find ConfigManager::GetData(%1)",fileName));
+            GetDFLogger().Error(string.Format("I did not find ConfigManager::GetData(%1)",fileName));
             return NULL;
         }
 
@@ -88,6 +88,6 @@ class ConfigManager extends FileConfigurationBase
 
 ConfigManager GetConfigManager()
 {
-    if (!DF_ConfigManager) DF_ConfigManager = new ConfigManager;
-    return DF_ConfigManager;
+    if (!dfConfigManager) dfConfigManager = new ConfigManager;
+    return dfConfigManager;
 };

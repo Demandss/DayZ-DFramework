@@ -12,5 +12,6 @@ modded class DayZGame
             GetDRPCManager().OnRPC(sender, target, rpc_type, ctx);
 			return;
 		}
+		super.OnRPC(sender, target, rpc_type, ctx);
     };
 };

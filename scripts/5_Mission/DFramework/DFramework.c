@@ -2,13 +2,19 @@ class DFramework
 {
     static void InitializeLogger()
     {
-        if (GetLogger().isCancelled()) return;
+        if (GetDFLogger().isCancelled()) return;
 
-        GetLogger().Initialize();
-        GetLogger().Log(LogLevel.NONE,"***Logger successfully initialized***");
+        GetDFLogger().Initialize();
+        GetDFLogger().Log(LogLevel.NONE,"***Logger successfully initialized***");
     };
 
     static void InitializeConfigManager()
     {
+        GetConfigManager();
+    };
+
+    static void InitializeEventManager()
+    {
+        GetDEventManager();
     };
 };

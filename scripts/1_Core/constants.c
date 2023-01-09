@@ -12,3 +12,13 @@ const int TICK_FREQUENCY_MILLIS = 50;
  * @brief Made for those who do not want to count how many ticks per second.
  */
 const int TICKS_PER_SECOND = 20;
+
+/**
+ * @brief Something like a pointer to call objects on the server or client, or maybe both there and there.
+ */
+enum DExecuteSide
+{
+    Server,
+    Client,
+    Both
+}

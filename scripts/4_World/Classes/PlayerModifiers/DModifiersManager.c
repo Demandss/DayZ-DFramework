@@ -35,7 +35,7 @@ class DModifiersManager
         string identifier = modifier.GetIdentifier();
 
 		if (identifier == string.Empty)
-			GetLogger().Warning(string.Format("Maybe you forgot to specify your modifier identifier in %1",modifier.Type()));
+			GetDFLogger().Warning(string.Format("Maybe you forgot to specify your modifier identifier in %1",modifier.Type()));
 
         ref map<string,ref DModifierBase> _Modifiers;
 
@@ -45,7 +45,7 @@ class DModifiersManager
 
             if (_Modifiers.Contains(identifier))
             {
-                GetLogger().Warning(string.Format("Why do you need two modifiers %1 and %2 with the same identifier %3",modifier.Type(),_Modifiers.Get(identifier).Type(),identifier));
+                GetDFLogger().Warning(string.Format("Why do you need two modifiers %1 and %2 with the same identifier %3",modifier.Type(),_Modifiers.Get(identifier).Type(),identifier));
                 return;
             }
             
@@ -129,7 +129,7 @@ class DModifiersManager
 
         if (!modifiers)
         {
-            GetLogger().Warning("Custom modifiers are not found, maybe you made a mistake somewhere or they should not be, in this case, ignore this message.");
+            GetDFLogger().Warning("Custom modifiers are not found, maybe you made a mistake somewhere or they should not be, in this case, ignore this message.");
             return;
         }
 
@@ -232,7 +232,7 @@ class DModifiersManager
 			}
 			else
 			{
-                GetLogger().Error(string.Format("DB loading: non-existent modifier with id:%1",modifierIdentifier));
+                GetDFLogger().Error(string.Format("DB loading: non-existent modifier with id:%1",modifierIdentifier));
 			}
 		}
 		

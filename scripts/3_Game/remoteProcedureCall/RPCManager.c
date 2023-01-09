@@ -3,13 +3,6 @@
  at 5/11/2022
 */
 
-enum DRPCSingleplayerExecuteType
-{
-    Server,
-    Client,
-    Both
-}
-
 enum DRPCType
 {
     Server,
@@ -19,9 +12,9 @@ enum DRPCType
 class DRPCWrapper
 {
     protected Class INSTANCE;
-    protected int SPExecuteType;
+    protected DExecuteSide SPExecuteType;
 
-    void DRPCWrapper(Class _instance, int _spExecuteType)
+    void DRPCWrapper(Class _instance, DExecuteSide _spExecuteType)
     {
         INSTANCE = _instance;
         SPExecuteType = _spExecuteType;
@@ -29,12 +22,12 @@ class DRPCWrapper
 
     Class Get() { return INSTANCE; };
 
-    int GetSPExecuteType() { return SPExecuteType; };
+    DExecuteSide GetSPExecuteType() { return SPExecuteType; };
 };
 
 class DRPCManager
 {
-    static const int DFRAMEWORK_RPC_ID = 44046;
+    static const int DFRAMEWORK_RPC_ID = 10090;
     
     protected autoptr map<string, ref map<string, ref DRPCWrapper>> m_RPCDataBase = new map<string, ref map<string, ref DRPCWrapper>>;
 
@@ -43,7 +36,7 @@ class DRPCManager
         Param2<string,string> data;
         if (!ctx.Read(data))
         {
-            GetLogger().Error("Failure reading the RPC data from ParamsReadContext");
+            GetDFLogger().Error("Failure reading the RPC data from ParamsReadContext");
             return;
         }
 
@@ -55,7 +48,7 @@ class DRPCManager
         {
             if (sender == NULL)
             {
-                GetLogger().Error("RPC was received from an invalid sender");
+                GetDFLogger().Error("RPC was received from an invalid sender");
                 return;
             }
             receivedFrom = sender.GetPlainId();
@@ -69,11 +62,11 @@ class DRPCManager
             {
                 auto functionData = new Param4<DRPCType, ParamsReadContext, PlayerIdentity, Object>(DRPCType.Server, ctx, sender, target);
 
-                if ( ( GetGame().IsServer() && GetGame().IsMultiplayer() ) || ( GetGame().IsServer() && !GetGame().IsMultiplayer() && ( wrapper.GetSPExecuteType() == DRPCSingleplayerExecuteType.Server || wrapper.GetSPExecuteType() == DRPCSingleplayerExecuteType.Both ) ))
+                if ( ( GetGame().IsServer() && GetGame().IsMultiplayer() ) || ( GetGame().IsServer() && !GetGame().IsMultiplayer() && ( wrapper.GetSPExecuteType() == DExecuteSide.Server || wrapper.GetSPExecuteType() == DExecuteSide.Both ) ))
                 {
                     GetGame().GameScript.CallFunctionParams( wrapper.Get(), function, NULL, functionData );
                 }
-                if ( ( GetGame().IsClient() && GetGame().IsMultiplayer() ) || ( GetGame().IsClient() && !GetGame().IsMultiplayer() && ( wrapper.GetSPExecuteType() == DRPCSingleplayerExecuteType.Client || wrapper.GetSPExecuteType() == DRPCSingleplayerExecuteType.Both ) ))
+                if ( ( GetGame().IsClient() && GetGame().IsMultiplayer() ) || ( GetGame().IsClient() && !GetGame().IsMultiplayer() && ( wrapper.GetSPExecuteType() == DExecuteSide.Client || wrapper.GetSPExecuteType() == DExecuteSide.Both ) ))
                 {
                     functionData.param1 = DRPCType.Client;
                     GetGame().GameScript.CallFunctionParams( wrapper.Get(), function, NULL, functionData );
@@ -81,7 +74,7 @@ class DRPCManager
                 return;
             }
         }
-        GetLogger().Warning(string.Format("%1 tried sending %2::%3 which does not seem to exist!",receivedFrom, modName, function));
+        GetDFLogger().Warning(string.Format("%1 tried sending %2::%3 which does not seem to exist!",receivedFrom, modName, function));
     };
 
     void RPC(string modName, string function, ref Param params = NULL, bool guaranteed = false, ref PlayerIdentity identity = NULL, ref Object target = NULL)
@@ -98,7 +91,7 @@ class DRPCManager
 				{
 					DRPCWrapper wrapper = m_RPCDataBase[ modName ][ function ];
 					
-					if ( ( wrapper.GetSPExecuteType() == DRPCSingleplayerExecuteType.Both ) )
+					if ( ( wrapper.GetSPExecuteType() == DExecuteSide.Both ) )
 					{
 						data.Insert( params );
 					}
@@ -123,16 +116,16 @@ class DRPCManager
 				{
 					DRPCWrapper wrapper = m_RPCDataBase[ modName ][ function ];
 					
-					if ( ( wrapper.GetSPExecuteType() == DRPCSingleplayerExecuteType.Both ) )
+					if ( ( wrapper.GetSPExecuteType() == DExecuteSide.Both ) )
 					{
-                        GetLogger().Warning(string.Format("%1::%2 does not support DRPCSingleplayerExecuteType.Both when using DRPCManager::SendRPCs, use DRPCManager::SendRPC instead!",modName, function));
+                        GetDFLogger().Warning(string.Format("%1::%2 does not support DExecuteSide.Both when using DRPCManager::SendRPCs, use DRPCManager::SendRPC instead!",modName, function));
                     }
 				}
 			}
 		}
 	};
 
-    void Register(string modName, string function, Class instense, int spExecuteType = DRPCSingleplayerExecuteType.Server)
+    void Register(string modName, string function, Class instense, int spExecuteType = DExecuteSide.Server)
     {
         if (!m_RPCDataBase.Contains(modName))
         {

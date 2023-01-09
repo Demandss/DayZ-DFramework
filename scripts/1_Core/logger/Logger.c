@@ -3,8 +3,6 @@
  at 4/19/2022
  */
 
-Logger DF_Logger;
-
 class Logger
 {
     private const string LOG_FOLDER = "$profile:logs/";
@@ -82,8 +80,10 @@ class Logger
     };
 };
 
-Logger GetLogger()
+static ref Logger dfLogger;
+
+static ref Logger GetDFLogger()
 {
-    if (!DF_Logger) DF_Logger = new Logger;
-    return DF_Logger;
+    if (!dfLogger) dfLogger = new Logger;
+    return dfLogger;
 }

@@ -25,27 +25,27 @@ class CfgMods
 			class engineScriptModule
 			{
 				value = "";
-				files[] = {"DFramework/scripts/1_Core"};
+				files[] = {"DFramework/scripts/1_core"};
 			};
 			class gameLibScriptModule
 			{
 				value = "";
-				files[] = {"DFramework/scripts/2_GameLib"};
+				files[] = {"DFramework/scripts/2_gameLib"};
 			};
 			class gameScriptModule
 			{
 				value = "";
-				files[] = {"DFramework/scripts/3_Game"};
+				files[] = {"DFramework/scripts/3_game"};
 			};
 			class worldScriptModule
 			{
 				value = "";
-				files[] = {"DFramework/scripts/4_World"};
+				files[] = {"DFramework/scripts/4_world"};
 			};
 			class missionScriptModule
 			{
 				value = "";
-				files[] = {"DFramework/scripts/5_Mission"};
+				files[] = {"DFramework/scripts/5_mission"};
 			};
 		};
 	};

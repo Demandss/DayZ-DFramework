@@ -1,6 +1,6 @@
 modded class PlayerBase
 {
-    ref DModifiersManager DF_ModifiersManager;
+    ref DModifiersManager dfModifiersManager;
 
     void Init()
 	{
@@ -8,21 +8,21 @@ modded class PlayerBase
 
         if( GetGame().IsServer() )
 		{
-            DF_ModifiersManager = new DModifiersManager(this);
-            GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(DF_OnScheduledTick, TICK_FREQUENCY_MILLIS, true);
+            dfModifiersManager = new DModifiersManager(this);
+            GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(dfOnScheduledTick, TICK_FREQUENCY_MILLIS, true);
         }
     };
 
-    void DF_OnScheduledTick()
+    void dfOnScheduledTick()
 	{
-		if( DF_ModifiersManager ) DF_ModifiersManager.OnScheduledTick();
+		if( dfModifiersManager ) dfModifiersManager.OnScheduledTick();
 	};
 
     override void OnStoreSave( ParamsWriteContext ctx )
 	{
         if ( GetDayZGame().IsServer() && GetDayZGame().IsMultiplayer() )
 		{
-			DF_ModifiersManager.OnStoreSave(ctx);
+			dfModifiersManager.OnStoreSave(ctx);
         }
 
         super.OnStoreSave(ctx);
@@ -32,13 +32,28 @@ modded class PlayerBase
 	{
         if ( GetDayZGame().IsServer() && GetDayZGame().IsMultiplayer() )
 		{
-			if(!DF_ModifiersManager.OnStoreLoad(ctx))
+			if(!dfModifiersManager.OnStoreLoad(ctx))
 			{
-                GetLogger().Error("Failed to load ModifiersManager, read fail.");
+                GetDFLogger().Error("Failed to load ModifiersManager, read fail.");
 				return false;
 			}
         }
 
         return super.OnStoreLoad(ctx,version);
     };
+
+    override void OnConnect()
+    {
+        super.OnConnect();
+
+        string joinMessage = "";
+
+        PlayerJoinEvent joinEvent = new PlayerJoinEvent(this,joinMessage);
+
+        GetDEventManager().CallEvent(joinEvent);
+
+        joinMessage = joinEvent.GetJoinMessage();
+
+        GetGame().RPCSingleParam(this, ERPCs.RPC_USER_ACTION_MESSAGE, new Param1<string>(joinMessage), true, this.GetIdentity());
+    }
 };

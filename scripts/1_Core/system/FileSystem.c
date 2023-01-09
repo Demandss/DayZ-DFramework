@@ -50,7 +50,7 @@ class FileSystem
 	/**
 	 * @brief Retrieves a directory from a path to a file
 	 */
-    string GetDirectory(DString path) 
+    static string GetDirectory(DString path) 
     { 
         path.Replace(ALT_SEPARATOR, GetSeparator());
 
@@ -62,15 +62,13 @@ class FileSystem
         return string.Empty;
     };
 
-	void GenerateDirectory(DString path = string.Empty)
+	/**
+	 * @brief Generates the specified path to file;
+	 */
+	static void GenerateDirectory(DString path)
     {
-		DString dir;
+		DString dir = GetDirectory(path);;
 		TStringArray folders = new TStringArray;
-
-		if (path == string.Empty)
-			dir = GetDirectory();
-		else
-			dir = GetDirectory(path);
 
 		if (dir.dCountChar(GetSeparator()) <= 1)
 		{
@@ -102,7 +100,7 @@ class FileSystem
 	{
 		if (!files) files = new array<DFile>();
 
-		path.Replace("\\", GetSeparator());
+		path.Replace(ALT_SEPARATOR, GetSeparator());
 
 		string fileName;
 		FileAttr fileAttr;
@@ -139,26 +137,27 @@ class FileSystem
 	 * 
 	 * @param path is full path to the file
 	 */
-	static void CreateFile(DString path)
+	static void CreateFile(DString path, bool checkPath = false)
 	{
+		if (checkPath)
+			GenerateDirectory(path);
+
 		FileHandle file = OpenFile(path, FileMode.WRITE);
 		if (file == 0) return;
 		CloseFile(file);
 	};
 
 	/**
-	 * @brief Recreates the file by returning a FileHandle, 
-	 *        don't forget to close it after use with "CloseFile"
+	 * @brief Recreates a file, deleting its predecessor. 
 	 * 
 	 * @param path is full path to the file
-	 * @return FileHandle 
 	 */
-	static FileHandle RecreateFile(DString path)
+	static void RecreateFile(DString path, bool checkPath = false)
 	{
 		if(FileExist(path))
 		{
 			DeleteFile(path);			
 		}
-		return OpenFile(path, FileMode.WRITE);
+		CreateFile(path,checkPath);
 	};
 };
