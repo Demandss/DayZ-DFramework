@@ -21,7 +21,7 @@ Code is **not** permissable to repack in your mod, you need to include it as req
 
 ---
 
-<h3 align="center">Info</h3>
+<h1 align="center">Info</h1>
 
 To work with databases you will need DFrameworkBridge link is below.
 
