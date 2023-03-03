@@ -29,18 +29,18 @@ class DRPCManager
 {
     static const int DFRAMEWORK_RPC_ID = 10090;
     
-    protected autoptr map<string, ref map<string, ref DRPCWrapper>> m_RPCDataBase = new map<string, ref map<string, ref DRPCWrapper>>;
+    protected autoptr map<ref DayZModification, ref map<string, ref DRPCWrapper>> m_RPCDataBase = new map<ref DayZModification, ref map<string, ref DRPCWrapper>>;
 
     void OnRPC(PlayerIdentity sender, Object target, int rpc_type, ParamsReadContext ctx)
     {
-        Param2<string,string> data;
+        Param2<ref DayZModification,string> data;
         if (!ctx.Read(data))
         {
             GetDFLogger().Error("Failure reading the RPC data from ParamsReadContext");
             return;
         }
 
-        string modName = data.param1;
+        DayZModification modification = data.param1;
         string function = data.param2;
 
         string receivedFrom = "Server";
@@ -55,7 +55,7 @@ class DRPCManager
         }
 
         map<string, ref DRPCWrapper> functions;
-        if (m_RPCDataBase.Find(modName,functions))
+        if (m_RPCDataBase.Find(modification,functions))
         {
             DRPCWrapper wrapper;
             if (functions.Find(function, wrapper))
@@ -74,22 +74,22 @@ class DRPCManager
                 return;
             }
         }
-        GetDFLogger().Warning(string.Format("%1 tried sending %2::%3 which does not seem to exist!",receivedFrom, modName, function));
+        GetDFLogger().Warning(string.Format("%1 tried sending %2::%3 which does not seem to exist!",receivedFrom, modification, function));
     };
 
-    void RPC(string modName, string function, ref Param params = NULL, bool guaranteed = false, ref PlayerIdentity identity = NULL, ref Object target = NULL)
+    void RPCSingleParam(DayZModification modification, string function, ref Param params = NULL, bool guaranteed = false, ref PlayerIdentity identity = NULL, ref Object target = NULL)
     {
         auto data = new array< ref Param >;
-		data.Insert( new Param2< string, string >( modName, function ) );
+		data.Insert( new Param2<ref DayZModification, string >( modification, function ) );
 		data.Insert( params );
 		
 		if ( !GetGame().IsMultiplayer() )
 		{
-			if ( m_RPCDataBase.Contains( modName ) )
+			if ( m_RPCDataBase.Contains( modification ) )
 			{
-				if ( m_RPCDataBase[ modName ].Contains( function ) )
+				if ( m_RPCDataBase[ modification ].Contains( function ) )
 				{
-					DRPCWrapper wrapper = m_RPCDataBase[ modName ][ function ];
+					DRPCWrapper wrapper = m_RPCDataBase[ modification ][ function ];
 					
 					if ( ( wrapper.GetSPExecuteType() == DExecuteSide.Both ) )
 					{
@@ -102,37 +102,43 @@ class DRPCManager
 		GetGame().RPC( target, DFRAMEWORK_RPC_ID, data, guaranteed, identity );
     };
 
-    void RPCs( string modName, string function, ref array< ref Param > params, bool guaranteed = false, ref PlayerIdentity sendToIdentity = NULL, ref Object sendToTarget = NULL )
+    void RPCParams(DayZModification modification, string function, ref array< ref Param > params, bool guaranteed = false, ref PlayerIdentity sendToIdentity = NULL, ref Object sendToTarget = NULL )
 	{
-		params.InsertAt( new Param2< string, string >( modName, function ), 0 );
+		params.InsertAt( new Param2< ref DayZModification, string >( modification, function ), 0 );
 
 		GetGame().RPC( sendToTarget, DFRAMEWORK_RPC_ID, params, guaranteed, sendToIdentity );
 
 		if ( !GetGame().IsMultiplayer() )
 		{
-			if ( m_RPCDataBase.Contains( modName ) )
+			if ( m_RPCDataBase.Contains( modification ) )
 			{
-				if ( m_RPCDataBase[ modName ].Contains( function ) )
+				if ( m_RPCDataBase[ modification ].Contains( function ) )
 				{
-					DRPCWrapper wrapper = m_RPCDataBase[ modName ][ function ];
+					DRPCWrapper wrapper = m_RPCDataBase[ modification ][ function ];
 					
 					if ( ( wrapper.GetSPExecuteType() == DExecuteSide.Both ) )
 					{
-                        GetDFLogger().Warning(string.Format("%1::%2 does not support DExecuteSide.Both when using DRPCManager::SendRPCs, use DRPCManager::SendRPC instead!",modName, function));
+                        GetDFLogger().Warning(string.Format("%1::%2 does not support DExecuteSide.Both when using DRPCManager::RPCParams, use DRPCManager::RPCSingleParam instead!",modification, function));
                     }
 				}
 			}
 		}
 	};
 
-    void Register(string modName, string function, Class instense, int spExecuteType = DExecuteSide.Server)
+    void ScriptRPC(DayZModification modification, string function, ref ScriptRPC rpc, bool guaranteed = false, ref PlayerIdentity sendToIdentity = NULL, ref Object sendToTarget = NULL )
+	{
+        rpc.Write(new Param2<ref DayZModification, string >( modification, function ));
+		rpc.Send(sendToTarget, DFRAMEWORK_RPC_ID, true, sendToIdentity);
+	};
+
+    void Register(DayZModification modification, string function, Class instense, int spExecuteType = DExecuteSide.Server)
     {
-        if (!m_RPCDataBase.Contains(modName))
+        if (!m_RPCDataBase.Contains(modification))
         {
-            m_RPCDataBase.Set(modName, new map<string, ref DRPCWrapper>);
+            m_RPCDataBase.Set(modification, new map<string, ref DRPCWrapper>);
         }
 
-        m_RPCDataBase[modName].Set(function,new DRPCWrapper(instense, spExecuteType));
+        m_RPCDataBase[modification].Set(function,new DRPCWrapper(instense, spExecuteType));
     };
 };
 

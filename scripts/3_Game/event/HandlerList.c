@@ -5,15 +5,15 @@
 
 class HandlerList
 {
-    private ref array<ref RegisteredListener> handlers = NULL;
-    private ref map<ref DEventPriority, ref array<ref RegisteredListener>> handlerslots = new map<ref DEventPriority, ref array<ref RegisteredListener>>;
-    private static ref array<ref HandlerList> allLists = new array<ref HandlerList>;
+    private ref array<ref RegisteredListener> m_Handlers = NULL;
+    private ref map<ref DEventPriority, ref array<ref RegisteredListener>> m_Handlerslots = new map<ref DEventPriority, ref array<ref RegisteredListener>>;
+    private static ref array<ref HandlerList> m_AllLists = new array<ref HandlerList>;
 
     static void BakeAll()
     {
-        if (allLists)
+        if (m_AllLists)
         {
-            foreach (HandlerList handlerList : allLists)
+            foreach (HandlerList handlerList : m_AllLists)
             {
                 handlerList.Bake();
             }
@@ -22,38 +22,38 @@ class HandlerList
 
     static void UnregisterAll()
     {
-        if (allLists)
+        if (m_AllLists)
         {
-            foreach (HandlerList handler : allLists)
+            foreach (HandlerList handler : m_AllLists)
             {
-                (handler.handlerslots).Set(DEventPriority.LOWEST, new array<ref RegisteredListener>);
-                (handler.handlerslots).Set(DEventPriority.LOW, new array<ref RegisteredListener>);
-                (handler.handlerslots).Set(DEventPriority.NORMAL, new array<ref RegisteredListener>);
-                (handler.handlerslots).Set(DEventPriority.HIGH, new array<ref RegisteredListener>);
-                (handler.handlerslots).Set(DEventPriority.HIGHEST, new array<ref RegisteredListener>);
-                (handler.handlerslots).Set(DEventPriority.MONITOR, new array<ref RegisteredListener>);
+                (handler.m_Handlerslots).Set(DEventPriority.LOWEST, new array<ref RegisteredListener>);
+                (handler.m_Handlerslots).Set(DEventPriority.LOW, new array<ref RegisteredListener>);
+                (handler.m_Handlerslots).Set(DEventPriority.NORMAL, new array<ref RegisteredListener>);
+                (handler.m_Handlerslots).Set(DEventPriority.HIGH, new array<ref RegisteredListener>);
+                (handler.m_Handlerslots).Set(DEventPriority.HIGHEST, new array<ref RegisteredListener>);
+                (handler.m_Handlerslots).Set(DEventPriority.MONITOR, new array<ref RegisteredListener>);
 
-                handler.handlers = NULL;
+                handler.m_Handlers = NULL;
             }
         }
     }
 
-    static void UnregisterAll(string modName)
+    static void UnregisterAll(DayZModification modification)
     {
-        if (allLists)
+        if (m_AllLists)
         {
-            foreach (HandlerList handler : allLists)
+            foreach (HandlerList handler : m_AllLists)
             {
-                handler.Unregister(modName);
+                handler.Unregister(modification);
             }
         }
     }
 
     static void UnregisterAll(Listener listener)
     {
-        if (allLists)
+        if (m_AllLists)
         {
-            foreach (HandlerList handler : allLists)
+            foreach (HandlerList handler : m_AllLists)
             {
                 handler.Unregister(listener);
             }
@@ -61,29 +61,29 @@ class HandlerList
     }
 
     void HandlerList() {
-        this.handlerslots.Insert(DEventPriority.LOWEST, new array<ref RegisteredListener>);
-        this.handlerslots.Insert(DEventPriority.LOW, new array<ref RegisteredListener>);
-        this.handlerslots.Insert(DEventPriority.NORMAL, new array<ref RegisteredListener>);
-        this.handlerslots.Insert(DEventPriority.HIGH, new array<ref RegisteredListener>);
-        this.handlerslots.Insert(DEventPriority.HIGHEST, new array<ref RegisteredListener>);
-        this.handlerslots.Insert(DEventPriority.MONITOR, new array<ref RegisteredListener>);
+        this.m_Handlerslots.Insert(DEventPriority.LOWEST, new array<ref RegisteredListener>);
+        this.m_Handlerslots.Insert(DEventPriority.LOW, new array<ref RegisteredListener>);
+        this.m_Handlerslots.Insert(DEventPriority.NORMAL, new array<ref RegisteredListener>);
+        this.m_Handlerslots.Insert(DEventPriority.HIGH, new array<ref RegisteredListener>);
+        this.m_Handlerslots.Insert(DEventPriority.HIGHEST, new array<ref RegisteredListener>);
+        this.m_Handlerslots.Insert(DEventPriority.MONITOR, new array<ref RegisteredListener>);
 
-        if (allLists) {
-            allLists.Insert(this);
+        if (m_AllLists) {
+            m_AllLists.Insert(this);
         }
     }
 
     void Register(RegisteredListener listener)
     {
-        if ((this.handlerslots.Get(listener.GetPriority())).Find(listener) != -1)
+        if ((this.m_Handlerslots.Get(listener.GetPriority())).Find(listener) != -1)
         {
             GetDFLogger().Error("This listener is alrady registered to priority " + typename.EnumToString(DEventPriority, listener.GetPriority()));
         }
         else
         {
-            this.handlers = NULL;
+            this.m_Handlers = NULL;
 
-            (this.handlerslots.Get(listener.GetPriority())).Insert(listener);
+            (this.m_Handlerslots.Get(listener.GetPriority())).Insert(listener);
         }
     }
 
@@ -100,25 +100,25 @@ class HandlerList
 
     void Unregister(RegisteredListener listener)
     {
-        (handlerslots.Get(listener.GetPriority())).RemoveItem(listener);
+        (m_Handlerslots.Get(listener.GetPriority())).RemoveItem(listener);
 
-        this.handlers = NULL;
+        this.m_Handlers = NULL;
     }
 
-    void Unregister(string modName)
+    void Unregister(DayZModification modification)
     {
         bool changed = false;
 
-        ref array<array<ref RegisteredListener>> var1 = this.handlerslots.GetValueArray();
+        ref array<array<ref RegisteredListener>> var1 = this.m_Handlerslots.GetValueArray();
 
         foreach (array<ref RegisteredListener> var2 : var1)
         {
-            DEventPriority priority = this.handlerslots.GetKeyByValue(var2);
+            DEventPriority priority = this.m_Handlerslots.GetKeyByValue(var2);
             foreach (RegisteredListener registeredListener : var2)
             {
-                if (registeredListener.GetModName() == modName)
+                if (registeredListener.GetModification() == modification)
                 {
-                    (handlerslots.Get(priority)).RemoveItem(registeredListener);
+                    (m_Handlerslots.Get(priority)).RemoveItem(registeredListener);
                     changed = true;
                 }
             }
@@ -126,7 +126,7 @@ class HandlerList
 
         if (changed)
         {
-            this.handlers = NULL;
+            this.m_Handlers = NULL;
         }
     }
 
@@ -134,16 +134,16 @@ class HandlerList
     {
         bool changed = false;
 
-        ref array<array<ref RegisteredListener>> var1 = this.handlerslots.GetValueArray();
+        ref array<array<ref RegisteredListener>> var1 = this.m_Handlerslots.GetValueArray();
 
         foreach (array<ref RegisteredListener> var2 : var1)
         {
-            DEventPriority priority = this.handlerslots.GetKeyByValue(var2);
+            DEventPriority priority = this.m_Handlerslots.GetKeyByValue(var2);
             foreach (RegisteredListener registeredListener : var2)
             {
                 if ((registeredListener.GetListener()).ClassName() == listener.ClassName())
                 {
-                    (handlerslots.Get(priority)).RemoveItem(registeredListener);
+                    (m_Handlerslots.Get(priority)).RemoveItem(registeredListener);
                     changed = true;
                 }
             }
@@ -151,23 +151,23 @@ class HandlerList
 
         if (changed)
         {
-            this.handlers = NULL;
+            this.m_Handlers = NULL;
         }
     }
 
     void Bake()
     {
-        if (this.handlers == NULL)
+        if (this.m_Handlers == NULL)
         {
-            this.handlers = new array<ref RegisteredListener>;
+            this.m_Handlers = new array<ref RegisteredListener>;
 
-            ref array<array<ref RegisteredListener>> var1 = this.handlerslots.GetValueArray();
+            ref array<array<ref RegisteredListener>> var1 = this.m_Handlerslots.GetValueArray();
             
             foreach (array<ref RegisteredListener> var2 : var1)
             {
                 foreach (RegisteredListener list : var2)
                 {
-                    this.handlers.Insert(list);
+                    this.m_Handlers.Insert(list);
                 }
             }
         }
@@ -179,26 +179,26 @@ class HandlerList
         while(_handlers == NULL)
         {
             this.Bake();
-            _handlers = this.handlers;
+            _handlers = this.m_Handlers;
         }
 
         return _handlers;
     }
 
-    static ref array<ref RegisteredListener> GetRegisteredListeners(string modName)
+    static ref array<ref RegisteredListener> GetRegisteredListeners(DayZModification modification)
     {
         ref array<ref RegisteredListener> listeners = new array<ref RegisteredListener>;
 
-        if (allLists) {
-            foreach (HandlerList handler : allLists)
+        if (m_AllLists) {
+            foreach (HandlerList handler : m_AllLists)
             {
-                ref array<array<ref RegisteredListener>> var1 = (handler.handlerslots).GetValueArray();
+                ref array<array<ref RegisteredListener>> var1 = (handler.m_Handlerslots).GetValueArray();
                 
                 foreach (array<ref RegisteredListener> list : var1)
                 {
                     foreach (RegisteredListener listener : list)
                     {
-                        if (listener.GetModName() == modName)
+                        if (listener.GetModification() == modification)
                         {
                             listeners.Insert(listener);
                         }
@@ -214,7 +214,7 @@ class HandlerList
     {
         ref array<ref HandlerList> var1 = new array<ref HandlerList>;
 
-        foreach (HandlerList var2 : allLists)
+        foreach (HandlerList var2 : m_AllLists)
         {
             var1.Insert(var2);
         }

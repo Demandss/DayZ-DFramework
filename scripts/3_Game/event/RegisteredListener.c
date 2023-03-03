@@ -5,27 +5,27 @@
 
 class RegisteredListener
 {
-    private ref Listener listener;
-    private DEventPriority priority;
-    private string modName;
-    private ref DEventExecutor executor;
+    private ref Listener m_Listener;
+    private DEventPriority m_Priority;
+    private ref DayZModification m_Modification;
+    private ref DEventExecutor m_Executor;
 
-    void RegisteredListener(Listener _listener, DEventPriority _priority, string _modName, DEventExecutor _executor)
+    void RegisteredListener(Listener listener, DEventPriority priority, DayZModification modification, DEventExecutor executor)
     {
-        this.listener = _listener;
-        this.priority = _priority;
-        this.modName = _modName;
-        this.executor = _executor;
+        this.m_Listener = listener;
+        this.m_Priority = priority;
+        this.m_Modification = modification;
+        this.m_Executor = executor;
     };
 
-    Listener GetListener() { return this.listener; };
+    Listener GetListener() { return this.m_Listener; };
 
-    string GetModName() { return this.modName; };
+    DayZModification GetModification() { return this.m_Modification; };
 
-    DEventPriority GetPriority() { return this.priority; };
+    DEventPriority GetPriority() { return this.m_Priority; };
 
     void CallEvent(DEvent devent)
     {
-        executor.Execute(this.listener,devent);
+        m_Executor.Execute(this.m_Listener,devent);
     }
 }

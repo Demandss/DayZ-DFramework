@@ -48,12 +48,31 @@ modded class PlayerBase
 
         string joinMessage = "";
 
-        PlayerJoinEvent joinEvent = new PlayerJoinEvent(this,joinMessage);
+        PlayerConnectEvent joinEvent = new PlayerConnectEvent(this,joinMessage);
 
-        GetDEventManager().CallEvent(joinEvent);
+        DFramework.GetDEventManager().CallEvent(joinEvent);
 
         joinMessage = joinEvent.GetJoinMessage();
+        string joinMessageColor = joinEvent.GetJoinMessageColor();
 
-        GetGame().RPCSingleParam(this, ERPCs.RPC_USER_ACTION_MESSAGE, new Param1<string>(joinMessage), true, this.GetIdentity());
-    }
+        Message(joinMessage,joinMessageColor);
+    };
+
+    override void OnDisconnect()
+    {
+        DFramework.GetDEventManager().CallEvent(new PlayerDisconnectEvent(this));
+        super.OnDisconnect();
+    };
+
+    override void EEHitBy(TotalDamageResult damageResult, int damageType, EntityAI source, int component, string dmgZone, string ammo, vector modelPos, float speedCoef)
+	{
+        DFramework.GetDEventManager().CallEvent(new PlayerHitedEvent(this, damageResult, damageType, source, component, dmgZone, ammo, modelPos, speedCoef));
+		super.EEHitBy(damageResult, damageType, source, component, dmgZone, ammo, modelPos, speedCoef);
+    };
+
+	override void EEKilled( Object killer )
+	{
+        DFramework.GetDEventManager().CallEvent(new PlayerKilledEvent(this,killer));
+		super.EEKilled( killer );
+    };
 };

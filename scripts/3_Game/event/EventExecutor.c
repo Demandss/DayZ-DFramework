@@ -5,15 +5,15 @@
 
 class DEventExecutor
 {
-    string function;
+    string m_Function;
 
     void DEventExecutor(string _function)
     {
-        this.function = _function;
+        this.m_Function = _function;
     }
 
     void Execute(Listener listener, DEvent devent)
     {
-        GetGame().GameScript.CallFunction( listener, this.function, NULL, devent );
+        GetGame().GameScript.CallFunction( listener, this.m_Function, NULL, devent );
     }
 }

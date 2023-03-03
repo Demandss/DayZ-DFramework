@@ -28,4 +28,13 @@ modded class Math
         float y = vectr[0] * sin + vectr[1] * cos;
         return Vector(x, y, vectr[2]);
     };
+
+	static float AverageValueOfVector(vector vec)
+	{
+		float value;
+		for (int i = 0; i < 3; i++) {
+			value += vec[i];
+		}
+		return value / 3;
+	};
 }

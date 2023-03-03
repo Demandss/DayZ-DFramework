@@ -1,1 +1,1 @@
-class TextUtility {}
+class TextUtility {};

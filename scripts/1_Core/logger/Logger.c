@@ -5,14 +5,14 @@
 
 class Logger
 {
-    private const string LOG_FOLDER = "$profile:logs/";
-    private const string LOG_PREVIUS_FILENAME = "log_%1.log";
-    private const string LOG_FILENAME = "latest.log";
+    protected const string LOG_FOLDER = "$profile:logs/";
+    protected const string LOG_PREVIUS_FILENAME = "log_%1.log";
+    protected const string LOG_FILENAME = "latest.log";
 
-    private const string LOG_PREFIX = "[%1]";
+    protected const string LOG_PREFIX = "[%1]";
 
-    private bool cancelled = false;
-    private DFile currentLogFile;
+    protected bool cancelled = false;
+    protected DFile currentLogFile;
 
     /**
      * @brief needed only to create a log folder and file.

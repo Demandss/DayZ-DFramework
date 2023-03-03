@@ -1,16 +1,28 @@
 class DataTime
 {
-    protected int m_Year;
-    protected int m_Month;
-    protected int m_Day;
-    protected int m_Hour;
-    protected int m_Minute;
-    protected int m_Second;
+    private int m_Year;
+    private int m_Month;
+    private int m_Day;
+    private int m_Hour;
+    private int m_Minute;
+    private int m_Second;
 
-    void DataTime()
-    {        
-        GetYearMonthDayUTC(m_Year,m_Month,m_Day);
-        GetHourMinuteSecondUTC(m_Hour,m_Minute,m_Second);
+    void DataTime(int year = -1, int month = -1, int day = -1,int hour = -1,int minute = -1,int second = -1)
+    {
+        if (year == -1 && month == -1 && day == -1 && hour == -1 && minute == -1 && second == -1)
+        {
+            GetYearMonthDayUTC(m_Year,m_Month,m_Day);
+            GetHourMinuteSecondUTC(m_Hour,m_Minute,m_Second);
+        }
+        else
+        {
+            m_Year = year;
+            m_Month = month;
+            m_Day = day;
+            m_Hour = hour;
+            m_Minute = minute;
+            m_Second = second;
+        }
     };
 
     int GetYear() {return m_Year;};

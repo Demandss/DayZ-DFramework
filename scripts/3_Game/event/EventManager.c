@@ -5,28 +5,28 @@
 
 class DEventManager
 {
-    private ref map<string,ref map<ref Listener,ref array<ref DEventListenerFunction>>> handlers = new map<string,ref map<ref Listener,ref array<ref DEventListenerFunction>>>;
+    private ref map<ref DayZModification,ref map<ref Listener,ref array<ref DEventListenerFunction>>> m_Handlers = new map<ref DayZModification,ref map<ref Listener,ref array<ref DEventListenerFunction>>>;
 
-    void RegisterHandler(string modName, DEventListenerFunction function)
+    void RegisterHandler(DayZModification modification, DEventListenerFunction function)
     {
-        if (!handlers.Contains(modName))
+        if (!m_Handlers.Contains(modification))
         {
-            handlers.Insert(modName, new map<ref Listener,ref array<ref DEventListenerFunction>>);
+            m_Handlers.Insert(modification, new map<ref Listener,ref array<ref DEventListenerFunction>>);
         }
 
-        if (!(handlers.Get(modName)).Contains(function.GetParent()))
+        if (!(m_Handlers.Get(modification)).Contains(function.GetParent()))
         {
-            (handlers.Get(modName)).Insert(function.GetParent(),new array<ref DEventListenerFunction>);
+            (m_Handlers.Get(modification)).Insert(function.GetParent(),new array<ref DEventListenerFunction>);
         }
 
-        ((handlers.Get(modName)).Get(function.GetParent())).Insert(function);
+        ((m_Handlers.Get(modification)).Get(function.GetParent())).Insert(function);
     }
 
-    ref map<ref typename, ref array<ref RegisteredListener>> CreateRegisteredListeners(Listener listener, string modName)
+    ref map<ref typename, ref array<ref RegisteredListener>> CreateRegisteredListeners(Listener listener, DayZModification modification)
     {
         ref map<ref typename, ref array<ref RegisteredListener>> ret = new map<ref typename, ref array<ref RegisteredListener>>;
 
-        ref array<ref DEventListenerFunction> functions = ((handlers.Get(modName)).Get(listener));
+        ref array<ref DEventListenerFunction> functions = ((m_Handlers.Get(modification)).Get(listener));
 
         foreach (DEventListenerFunction function : functions)
         {
@@ -35,15 +35,15 @@ class DEventManager
                 ret.Insert(function.GetEvent(), new array<ref RegisteredListener>);
             }
 
-            (ret.Get(function.GetEvent())).Insert(new RegisteredListener(listener,function.GetDEventPriority(),modName,new DEventExecutor(function.GetName())));
+            (ret.Get(function.GetEvent())).Insert(new RegisteredListener(listener,function.GetDEventPriority(),modification,new DEventExecutor(function.GetName())));
         }
 
         return ret;
     }
 
-    void RegisterEvents(Listener listener, string modName)
+    void RegisterEvents(Listener listener, DayZModification modification)
     {
-        ref map<ref typename, ref array<ref RegisteredListener>> entry = CreateRegisteredListeners(listener,modName);
+        ref map<ref typename, ref array<ref RegisteredListener>> entry = CreateRegisteredListeners(listener,modification);
 
         ref array<typename> entryDEvents = entry.GetKeyArray();
 
@@ -83,14 +83,4 @@ class DEventManager
             registration.CallEvent(devent);
         }
     }
-}
-
-static ref DEventManager g_DEventManager;
-
-static DEventManager GetDEventManager()
-{
-	if ( !g_DEventManager )
-		g_DEventManager = new DEventManager();
-
-	return g_DEventManager;
 }

@@ -5,7 +5,7 @@
 
 class PlayerEvent extends DEvent
 {
-    protected PlayerBase player;
+    protected PlayerBase m_Player;
 
-    PlayerBase GetPlayer() { return this.player; };
+    PlayerBase GetPlayer() { return this.m_Player; };
 }

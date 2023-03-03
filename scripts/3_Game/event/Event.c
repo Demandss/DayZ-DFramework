@@ -11,21 +11,21 @@ enum DEventResult {
 
 class DEvent
 {
-    protected string name = string.Empty;
-    protected bool async;
+    protected string m_Name = string.Empty;
+    protected bool m_IsAsync;
 
     void DEvent() 
     {
-        this.async = false;
+        this.m_IsAsync = false;
     };
 
     string GetEventName() 
     {
-        if (name == string.Empty) 
+        if (m_Name == string.Empty) 
         {
-            name = this.ClassName();
+            m_Name = this.ClassName();
         }
-        return name;
+        return m_Name;
     };
 
     ref HandlerList GetHandlers();
@@ -34,6 +34,6 @@ class DEvent
 
     bool IsAsynchronous() 
     {
-        return async;
+        return m_IsAsync;
     };
 };

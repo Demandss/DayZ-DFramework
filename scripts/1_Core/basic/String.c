@@ -8,10 +8,11 @@ typedef string DString;
 
 class DString : string
 {
-    /**
+    /** Deprecated
 	 * @brief In general, it does everything the same as the one 
      *       that is originally in the game, BUT mine works, 
      *       unlike what the game provides.
+     *       The function did not work from 2020 to 2023
 	 */
     int dLastIndexOf(string sample)
     {

@@ -5,18 +5,18 @@
 
 class DEventListenerFunction extends Function
 {
-    protected typename devent;
-    protected DEventPriority priority;
+    protected typename m_DEvent;
+    protected DEventPriority m_Priority;
 
     void DEventListenerFunction(string _name, Class _parent, typename _devent, DEventPriority _priority = DEventPriority.NORMAL)
     {
         name = _name;
         parent = _parent;
-        this.devent = _devent;
-        this.priority = _priority;
+        this.m_DEvent = _devent;
+        this.m_Priority = _priority;
     }
 
-    typename GetEvent() { return this.devent; };
+    typename GetEvent() { return this.m_DEvent; };
 
-    DEventPriority GetDEventPriority() { return this.priority; };
+    DEventPriority GetDEventPriority() { return this.m_Priority; };
 }

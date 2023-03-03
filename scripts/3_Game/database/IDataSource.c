@@ -1,0 +1,4 @@
+class IDataSource
+{
+    DataSourceConnection GetConnection();
+};

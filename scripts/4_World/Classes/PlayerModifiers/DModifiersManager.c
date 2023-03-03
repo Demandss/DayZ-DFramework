@@ -6,12 +6,12 @@
 class DModifiersManager
 {
     protected PlayerBase m_Player;
-    protected autoptr map<string,ref map<string,ref DModifierBase>> m_Modifiers;
+    protected autoptr map<ref DayZModification,ref map<string,ref DModifierBase>> m_Modifiers;
 	protected ref array<ref Param> m_Params;
 
     void DModifiersManager(PlayerBase player)
 	{
-		m_Modifiers = new map<string,ref map<string,ref DModifierBase>>;
+		m_Modifiers = new map<ref DayZModification,ref map<string,ref DModifierBase>>;
 		m_Params = new array<ref Param>;
 		m_Player = player;
 
@@ -27,9 +27,9 @@ class DModifiersManager
      * @brief Registers a modifier into memory.
      * 
      * @param modifier - just pass your modifier as before.
-     * @param modName - needed for those who do not want to face incompatibility with other modification.
+     * @param modification - needed for those who do not want to face incompatibility with other modification.
      */
-    void RegisterModifier(DModifierBase modifier, string modName = "DFramework")
+    void RegisterModifier(DModifierBase modifier, DayZModification modification = DFramework.Get())
 	{
 		modifier.RegisterModifer(m_Player,this);
         string identifier = modifier.GetIdentifier();
@@ -39,9 +39,9 @@ class DModifiersManager
 
         ref map<string,ref DModifierBase> _Modifiers;
 
-        if (m_Modifiers.Contains(modName))
+        if (m_Modifiers.Contains(modification))
         {
-            _Modifiers = m_Modifiers.Get(modName);
+            _Modifiers = m_Modifiers.Get(modification);
 
             if (_Modifiers.Contains(identifier))
             {
@@ -51,14 +51,14 @@ class DModifiersManager
             
             _Modifiers.Insert(identifier,modifier);
 
-            m_Modifiers.Set(modName,_Modifiers);
+            m_Modifiers.Set(modification,_Modifiers);
         }
         else
         {
             _Modifiers = new map<string,ref DModifierBase>;
             _Modifiers.Insert(identifier,modifier);
             
-            m_Modifiers.Insert(modName,_Modifiers);
+            m_Modifiers.Insert(modification,_Modifiers);
         }
 	};
 
@@ -67,11 +67,11 @@ class DModifiersManager
     /**
      * @brief Will tell if this modifier is active.
      * 
-     * @param modName - needed for those who do not want to face incompatibility with other modification.
+     * @param modification - needed for those who do not want to face incompatibility with other modification.
      */
-    bool IsModifierActive(string modifierIdentifier, string modName = "DFramework")
+    bool IsModifierActive(string modifierIdentifier, DayZModification modification = DFramework.Get())
 	{
-		return m_Modifiers.Get(modName).Get(modifierIdentifier).IsActive();
+		return m_Modifiers.Get(modification).Get(modifierIdentifier).IsActive();
 	};
 
     ref array<ref DModifierBase> GetAllModifiers()
@@ -86,11 +86,11 @@ class DModifiersManager
         return modifiers;
     };
 
-    ref map<string,ref DModifierBase> GetModifiers(string modName = string.Empty)
+    ref map<string,ref DModifierBase> GetModifiers(DayZModification modification = NULL)
     {
         ref map<string,ref DModifierBase> modifiers = new map<string,ref DModifierBase>;
 
-        if (modName == string.Empty)
+        if (modification == NULL)
         {
             foreach (map<string,ref DModifierBase> value : m_Modifiers.GetValueArray())
             {
@@ -102,25 +102,25 @@ class DModifiersManager
         }
         else
         {
-            modifiers = m_Modifiers.Get(modName);
+            modifiers = m_Modifiers.Get(modification);
         }
 
         return modifiers;
     }
 
-	DModifierBase GetModifier(string modifierIdentifier, string modName = string.Empty)
+	DModifierBase GetModifier(string modifierIdentifier, DayZModification modification = NULL)
 	{
-		return GetModifiers(modName).Get(modifierIdentifier);
+		return GetModifiers(modification).Get(modifierIdentifier);
 	}
 
-	void SetModifierLock(string modifierIdentifier, bool state, string modName = string.Empty)
+	void SetModifierLock(string modifierIdentifier, bool state, DayZModification modification = NULL)
 	{
-        GetModifier(modifierIdentifier,modName).SetLock(state);
+        GetModifier(modifierIdentifier,modification).SetLock(state);
 	}
 
-	bool GetModifierLock(string modifierIdentifier, string modName = string.Empty)
+	bool GetModifierLock(string modifierIdentifier, DayZModification modification = NULL)
 	{
-		return GetModifier(modifierIdentifier,modName).IsLocked();
+		return GetModifier(modifierIdentifier,modification).IsLocked();
 	}
 
     void DeactivateAllModifiers()
@@ -139,14 +139,14 @@ class DModifiersManager
 		}
 	};
 
-    void ActivateModifier(string modifierIdentifier, bool triggerEvent = EActivationType.TRIGGER_EVENT_ON_ACTIVATION, string modName = string.Empty)
+    void ActivateModifier(string modifierIdentifier, bool triggerEvent = EActivationType.TRIGGER_EVENT_ON_ACTIVATION, DayZModification modification = NULL)
 	{
-        GetModifier(modifierIdentifier,modName).ActivateRequest(triggerEvent);
+        GetModifier(modifierIdentifier,modification).ActivateRequest(triggerEvent);
 	}
 
-	void DeactivateModifier(string modifierIdentifier, string modName = string.Empty)
+	void DeactivateModifier(string modifierIdentifier, DayZModification modification = NULL)
 	{
-        GetModifier(modifierIdentifier,modName).Deactivate();
+        GetModifier(modifierIdentifier,modification).Deactivate();
 	}
 
     void OnScheduledTick()

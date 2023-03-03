@@ -90,11 +90,15 @@ class TimeUtility
     /**
      * @brief 
      * 
+     * @param you can send custom DateTime.
      * @return the difference, measured in seconds, 
-     * between the current time and midnight, January 1, 1970 UTC.
+     * between the current or custom time and midnight, January 1, 1970 UTC.
      */
-    static int CurrentTimeSeconds()
+    static int TimeInSeconds(DataTime data = NULL)
     {
+        if (data == NULL)
+            data = new DataTime();
+
         int year;
         int month;
         int day;
@@ -103,7 +107,6 @@ class TimeUtility
         int minute;
         int second;
 
-        DataTime data = new DataTime();
         data.GetYearMonthDayHourMinuteSecondUTC(year,month,day,hour,minute,second);
 
         int time;
