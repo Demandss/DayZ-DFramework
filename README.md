@@ -21,6 +21,10 @@ Code is **not** permissable to repack in your mod, you need to include it as req
 
 ---
 
+<h3 align="center">Info</h3>
+
+To work with databases you will need DFrameworkBridge link is below.
+
 <h1 align="center">Installation</h1>
 
 ```cpp
