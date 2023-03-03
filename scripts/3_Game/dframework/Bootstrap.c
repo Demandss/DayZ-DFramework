@@ -13,7 +13,6 @@ class Bootstrap extends DayZModification
         DFramework.InitializeLogger();
         DFramework.InitializeConfigManager();
         DFramework.InitializeEventManager();
-        DFramework.TestDataBase();
     };
 
     override void OnMissionPreInit()

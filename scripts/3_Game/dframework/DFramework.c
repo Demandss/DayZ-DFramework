@@ -38,20 +38,4 @@ class DFramework
 
         return m_DEventManager;
     };
-
-    static void TestDataBase()
-    {
-        DataSource dataSource = new DataSource(Bootstrap.INSTANCE);
-        
-        SQLDataSourceConnection connection = dataSource.GetConnection();
-
-        //connection.ExecuteUpdate("CREATE TABLE IF NOT EXISTS Test (ttext varchar(255),numbers int);");
-        //connection.ExecuteUpdate("INSERT INTO test (ttext,numbers) VALUES (\'asdywqeytm\',88888)");
-
-        ref DataSourceQueryResult result = connection.CreateQuery("SELECT * FROM test").Execute();
-
-        Print(result.GetColumnNames());
-        Print(result.GetColumn("ttext"));
-        Print(result.GetColumn("numbers"));
-    };
 };
