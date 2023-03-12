@@ -44,6 +44,8 @@ DFrameworkBridge: [link](https://github.com/Demandss/DFrameworkBridge)
 
 DFramework Wiki: [link](https://demands.gitbook.io/dframework/)
 
+DFrameworkBridge: [link](https://github.com/Demandss/DFrameworkBridge)
+
 DayZ Wiki: [link](https://community.bistudio.com/wiki/Main_Page)
 
 SteamWorkshop: [link](https://steamcommunity.com/sharedfiles/filedetails/?id=2796703209)
