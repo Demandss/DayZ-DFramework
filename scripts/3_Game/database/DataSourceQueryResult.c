@@ -6,6 +6,7 @@ class DataSourceQueryResult
 
     void DataSourceQueryResult(string data)
     {
+        Print(data);
         auto result = new map<string,array<string>>;
 		JsonSerializer serializer = new JsonSerializer;
         string error;
@@ -14,7 +15,7 @@ class DataSourceQueryResult
 
         m_Data.Copy(result);
 
-        if (m_Data != NULL)
+        if (GetColumnCount() > 0)
             m_IteratorEnd = ((m_Data.GetElement(0)).Count() - 1);
     };
 

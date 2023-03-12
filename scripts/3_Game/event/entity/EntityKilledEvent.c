@@ -14,7 +14,7 @@ class EntityKilledEvent extends DEntityEvent
         return this.m_Killer;
     };
 
-    overrideref HandlerList GetHandlers() 
+    override ref HandlerList GetHandlers() 
     {
         return handlers;
     };

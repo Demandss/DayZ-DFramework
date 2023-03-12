@@ -7,9 +7,9 @@ class DEventExecutor
 {
     string m_Function;
 
-    void DEventExecutor(string _function)
+    void DEventExecutor(string function)
     {
-        this.m_Function = _function;
+        this.m_Function = function;
     }
 
     void Execute(Listener listener, DEvent devent)

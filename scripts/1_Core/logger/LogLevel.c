@@ -14,9 +14,9 @@ enum LogType
 
 class LogLevel 
 {
-    private string name;
+    private string m_Name;
     
-    private int value;
+    private int m_Value;
 
     /**
      * @brief ERROR is a message level indicating a serious failure.
@@ -66,15 +66,15 @@ class LogLevel
         LogType.DEBUG, LogType.INFO, LogType.WARNING, LogType.ERROR, LogType.NONE
     };
 
-    protected void LogLevel(string _name, int _value)
+    protected void LogLevel(string name, int value)
     {
-        name = _name;
-        value = _value;
+        m_Name = name;
+        m_Value = value;
     };
 
-    string GetName() {return name;};
+    string GetName() {return m_Name;};
 
-    string ToString1() {return name;};
+    string ToString1() {return m_Name;};
 
-    int GetValue() {return value;};
+    int GetValue() {return m_Value;};
 };
