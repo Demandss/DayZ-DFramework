@@ -1,8 +1,8 @@
 class DataBaseCallback extends RestCallback
 {
     private string m_Request;
-    private ref Class m_ResultSendClassInst; 
-    private string m_ResultSendFunction; 
+    private ref Class m_ResultSendClassInst = NULL; 
+    private string m_ResultSendFunction = ""; 
     private ref Param m_ResultSendFunctionParams; 
 
     void DataBaseCallback(string request = string.Empty)
@@ -33,7 +33,8 @@ class DataBaseCallback extends RestCallback
 
 	override void OnSuccess( string data, int dataSize )
 	{
-        GetGame().GameScript.CallFunction(m_ResultSendClassInst, m_ResultSendFunction, NULL, new DataSourceQueryResult(data));
+        if(m_ResultSendClassInst != NULL && m_ResultSendFunction != "")
+            GetGame().GameScript.CallFunction(m_ResultSendClassInst, m_ResultSendFunction, NULL, new DataSourceQueryResult(data));
 	};
 
 	override void OnFileCreated( string fileName, int dataSize ) {};

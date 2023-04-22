@@ -6,7 +6,6 @@ class DataSourceQueryResult
 
     void DataSourceQueryResult(string data)
     {
-        Print(data);
         auto result = new map<string,array<string>>;
 		JsonSerializer serializer = new JsonSerializer;
         string error;
@@ -78,11 +77,7 @@ class DataSourceQueryResult
 
     vector GetVector(int columnIndex)
     {
-        string data = GetString(columnIndex);
-        data.Replace("<","");
-        data.Replace(">","");
-        data.Replace(",","");
-        return data.ToVector();
+        return GetString(columnIndex).BeautifiedToVector();
     };
 
     /**
@@ -122,11 +117,7 @@ class DataSourceQueryResult
 
     vector GetVector(string columnName)
     {
-        string data = GetString(columnName);
-        data.Replace("<","");
-        data.Replace(">","");
-        data.Replace(",","");
-        return data.ToVector();
+        return GetString(columnName).BeautifiedToVector();
     };
 
     /**

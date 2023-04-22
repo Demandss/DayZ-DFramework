@@ -14,16 +14,6 @@ class SQLDataSourceQuery extends IDataSourceQuery
         m_Connection = connection;
     };
 
-    override void SetOffset(int offset)
-    {
-        m_QueryBody += " OFFSET " + offset;
-    };
-
-    override void SetLimit(int limit)
-    {
-        m_QueryBody += " LIMIT " + limit;
-    };
-
     override string ExecuteStrNow(EDataSourceQueryResultType type)
     {
         return (m_Connection.GetRestContext()).POST_now(m_Connection.GetRestRequestBody() + "query","mod=" + m_Connection.GetDataSource().GetModification().GetName() + "&type=" + typename.EnumToString(EDataSourceQueryResultType, type) + "&request=" + m_QueryBody);

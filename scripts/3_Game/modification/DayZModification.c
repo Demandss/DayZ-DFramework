@@ -1,3 +1,8 @@
+/*
+ This code powered by ©Demands.
+ at 04/06/2023
+ */
+
 class DayZModification extends ModificationBase
 {
     private ref ModificationDescription m_Description = NULL;

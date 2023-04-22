@@ -36,5 +36,12 @@ class DString : string
 			count += value.Get(index) == sample;
 		}
 		return count;
-    }
+    };
+
+    string ReplaceInRange(int start, int len, string replacement)
+    {
+        autoptr array<string> arr = new array<string>;
+        value.Split(value.Substring(start,len),arr);
+        return arr[0] + replacement + arr[1];
+    };
 };

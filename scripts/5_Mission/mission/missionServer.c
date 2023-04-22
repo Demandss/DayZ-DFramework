@@ -18,8 +18,6 @@ modded class MissionServer
 	{
 		super.OnInit();
 
-        GetDRPCManager().Register(DFramework.Get(),"ChatMessageHander",this);
-
         if (m_Modifications)
             foreach (Modification modification : m_Modifications)
                 if (modification != NULL)
@@ -34,6 +32,8 @@ modded class MissionServer
             foreach (Modification modification : m_Modifications)
                 if (modification != NULL)
                     modification.OnMissionPostInit();
+
+        GetDRPCManager().Register(DFramework.Get(),"ChatMessageHander",this);
     };
 
     void ChatMessageHander(DRPCType type, ParamsReadContext ctx, PlayerIdentity sender, Object target)
@@ -57,7 +57,7 @@ modded class MissionServer
         foreach(PlayerBase p : devent.GetRecipients())
         {
             string msg = string.Format(devent.GetFormat(),devent.GetPlayer().GetIdentity().GetName(),devent.GetMessage());
-			GetGame().ChatMP(p, msg, "0xFFFFFFFF");
+            GetGame().ChatMP(p, msg, "0xFFFFFFFF");
         }
     };
 };

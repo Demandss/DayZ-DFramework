@@ -30,6 +30,7 @@ class Logger
         {
             DataTime data = DataTime();
             currentLogFile.Rename(string.Format(previusFileName,data.ToString2()));
+            currentLogFile = NULL;
             currentLogFile = new DFile(filePath);
         }
     };

@@ -8,9 +8,7 @@ modded class ChatInputMenu
 
 		if (text != "")
 		{
-			ScriptRPC rpc = new ScriptRPC();
-			rpc.Write(new Param2<PlayerBase,string>(g_Game.GetPlayer(),text));
-            GetDRPCManager().ScriptRPC(DFramework.Get(),"ChatMessageHander",rpc,true);
+            GetDRPCManager().RPCSingleParam(DFramework.Get(),"ChatMessageHander",new Param2<PlayerBase,string>(g_Game.GetPlayer(),text),true);
 		}
 
 		m_close_timer.Run(0.1, this, "Close");

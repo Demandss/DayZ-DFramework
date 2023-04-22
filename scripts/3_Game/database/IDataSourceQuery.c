@@ -2,10 +2,6 @@ class IDataSourceQuery
 {
     protected DataSourceConnection m_Connection;
 
-    void SetOffset(int offset);
-
-    void SetLimit(int limit);
-
     ref DataSourceQueryResult ExecuteNow()
     {
         return new DataSourceQueryResult(ExecuteStrNow(EDataSourceQueryResultType.json));
