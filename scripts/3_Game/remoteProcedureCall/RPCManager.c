@@ -125,12 +125,6 @@ class DRPCManager
 		}
 	};
 
-    void ScriptRPC(DayZModification modification, string function, ref ScriptRPC rpc, bool guaranteed = false, ref PlayerIdentity sendToIdentity = NULL, ref Object sendToTarget = NULL )
-	{
-        rpc.Write(new Param2<ref DayZModification, string >( modification, function ));
-		rpc.Send(sendToTarget, DFRAMEWORK_RPC_ID, true, sendToIdentity);
-	};
-
     void Register(DayZModification modification, string function, Class instense, int spExecuteType = DExecuteSide.Server)
     {
         if (!m_RPCDataBase.Contains(modification))
