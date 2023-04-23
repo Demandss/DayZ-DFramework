@@ -47,7 +47,7 @@ class ChanceCalculatorUtility
      * @param amount
      * @return arr winers by amount
      */
-    static ref array<ref Chanceble> CalculateSpecificAmount(array<Chanceble> data, int amount)
+    static ref array<ref Chanceble> CalculateSpecificAmount(array<ref Chanceble> data, int amount)
     {
         autoptr array<ref Chanceble> result = new array<ref Chanceble>;
         
@@ -65,14 +65,17 @@ class ChanceCalculatorUtility
      * @param data - сhanceble items arr
      * @return winner
      */
-    static ref Chanceble Calculate(array<Chanceble> data)
+    static ref Chanceble Calculate(array<ref Chanceble> datas)
     {
         autoptr array<ref Chanceble> var = new array<ref Chanceble>;
 
         while (true)
         {
             var.Clear();
-            var.Copy(data);
+            foreach (Chanceble data : datas)
+            {
+                var.Insert(data);
+            }
             var.ShuffleArray();
 
             float randomChance = Math.RandomFloat01();
